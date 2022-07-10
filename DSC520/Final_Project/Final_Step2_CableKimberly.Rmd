@@ -1,0 +1,313 @@
+---
+title: "Intelligence of Dogs"
+author: "Kimberly Cable"
+date: "05-21-2022"
+output:
+  pdf_document: default
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Final Project - Step 2
+
+### How to import and clean my data
+
+```{r echo = FALSE}
+## Load the ggplot2 package
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(purrr)
+theme_set(theme_minimal())
+```
+
+
+Load and read each of the datasets:
+
+* **dog_intelligence.csv**
+
+```{r}
+intelligence_df <- read.csv("Final_Project/data/dog_intelligence.csv", 
+    header = TRUE, 
+    stringsAsFactors = FALSE)
+head(intelligence_df)
+```
+
+* **AKC Breed Info.csv**
+
+```{r}
+breed_df <- read.csv("Final_Project/data/AKC Breed Info.csv")
+head(breed_df)
+```
+
+* **Table_4_Heterozygosity_85_breeds.csv**
+
+```{r}
+heterozygosity_4_df <- read.csv("Final_Project/data/Table_4_Heterozygosity_85_breeds.csv")
+head(heterozygosity_4_df)
+```
+
+* **Table_5_Expected_Heterozygosity_60_breeds.csv**
+
+```{r}
+heterozygosity_5_df <- read.csv("Final_Project/data/Table_5_Expected_Heterozygosity_60_breeds.csv")
+colnames(heterozygosity_5_df)[2] <- 'Heterozygosity_x10_4' 
+
+head(heterozygosity_5_df)
+```
+
+
+**Create New Dataframe from the Intelligence data**
+
+```{r}
+combined_df <- intelligence_df
+
+head(combined_df)
+```
+
+
+**Inner Join Breed data to new combined df on key Breed**
+
+```{r}
+combined_df <- combined_df %>% 
+    inner_join(breed_df, by = c("Breed" = "Breed"))
+
+head(combined_df)
+```
+
+**Inner Join Heterozygosity 4 to new combined df on key Breed = Population**
+
+```{r}
+combined_df <- combined_df %>% 
+    inner_join(heterozygosity_4_df, by = c("Breed" = "Population"))
+
+head(combined_df)
+```
+
+**Inner Join Heterozygosity 5 to new combined df on key Breed**
+
+```{r}
+combined_df <- combined_df %>% 
+    inner_join(heterozygosity_5_df, by = c("Breed" = "Breed"))
+
+head(combined_df)
+```
+
+**Convert n/a or na to empty cell**
+
+```{r}
+combined_df[combined_df == 'n/a'] <- ''
+combined_df[combined_df == 'na'] <- ''
+```
+
+
+**Convert obey to numeric**
+
+```{r}
+combined_df$obey <- gsub("%", "", as.character(combined_df$obey)) 
+
+combined_df$obey <- as.numeric(combined_df$obey) / 100
+```
+
+**Convert height and weight to numeric**
+
+```{r}
+combined_df$height_low_inches <- as.numeric(combined_df$height_low_inches)
+combined_df$height_high_inches <- as.numeric(combined_df$height_high_inches)
+combined_df$weight_low_lbs <- as.numeric(combined_df$weight_low_lbs)
+combined_df$weight_high_lbs <- as.numeric(combined_df$weight_high_lbs)
+```
+
+### What does the final data set look like?
+
+```{r}
+head(combined_df)
+```
+
+### What information is not self-evident?
+* Initially I do not know exactly what Heterozygosity and Heterozygosity (x10-4) are and the difference between the two columns.
+
+### What are different ways you could look at this data?
+One could strictly look at the obey percentage without looking at the number of reps a dog can do. You can also just look at the upper and lower reps versus taking the average number of reps a dog can do. Same problem with height and weight if I were to look at if intelligence is strictly by the weight of a breed or how tall a breed is.
+
+### How do you plan to slice and dice the data?
+
+* **Add average weight and height to dataframe**
+
+```{r}
+combined_df$avg.weight = rowMeans(
+  combined_df[,c('weight_low_lbs', 'weight_high_lbs')], na.rm = TRUE)
+combined_df$avg.height = rowMeans(
+  combined_df[,c('height_low_inches', 'height_high_inches')], na.rm = TRUE)
+
+head(combined_df)
+```
+
+### How could you summarize your data to answer key questions?
+
+* **Descriptive Statistics on all variables**
+```{r}
+summary(combined_df)
+```
+
+* **Descriptive Statistics on all variables grouped by Classification**
+
+```{r}
+combined_df %>% 
+  split(.$Classification) %>% 
+  map(summary)
+```
+
+* **Remove empty cells from variables for plots**
+
+```{r}
+combined_complete <- combined_df[complete.cases(combined_df), ] 
+head(combined_complete)
+```
+
+### What types of plots and tables will help you illustrate the findings to your questions?
+
+```{r}
+ggplot(combined_complete, aes(obey)) + 
+    labs(title = "Histogram Obey Percentage", 
+        x = "Obey Percentage", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$obey, na.rm = TRUE), 
+                              sd = sd(combined_complete$obey, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+
+```{r}
+ggplot(combined_complete, aes(avg.weight)) + 
+    labs(title = "Histogram Average Weight", 
+        x = "Weight (lbs)", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$avg.weight, na.rm = TRUE), 
+                              sd = sd(combined_complete$avg.weight, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+
+```{r}
+ggplot(combined_complete, aes(avg.height)) + 
+    labs(title = "Histogram Average Height", 
+        x = "Height (inches)", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$avg.height, na.rm = TRUE), 
+                              sd = sd(combined_complete$avg.height, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+
+```{r}
+ggplot(combined_complete, aes(Heterozygosity)) + 
+    labs(title = "Histogram Heterozygosity", 
+        x = "Heterozygosity", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$Heterozygosity, na.rm = TRUE), 
+                              sd = sd(combined_complete$Heterozygosity, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+
+```{r}
+ggplot(combined_complete, aes(Heterozygosity_x10_4)) + 
+    labs(title = "Histogram Heterozygosity_x10_4", 
+        x = "Heterozygosity_x10_4", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$Heterozygosity_x10_4, na.rm = TRUE), 
+                              sd = sd(combined_complete$Heterozygosity_x10_4, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+* **Scatter Plot of obey and avg.weight**
+
+```{r}
+scatter <- ggplot(combined_complete, aes(obey, avg.weight))
+scatter + geom_point() +
+    scale_x_continuous(n.breaks = 10) +
+    geom_smooth(method = 'lm', alpha = 0.1) +
+                    labs(x = "Obey Percentage", y = "Average Weight") +
+    ggtitle('Obey Percentage and Average Weight')
+```
+
+* **Scatter Plot of obey and avg.weight colored by height**
+
+```{r}
+scatter <- ggplot(combined_complete, aes(obey, avg.weight, col = avg.height))
+scatter + geom_point() +
+    scale_x_continuous(n.breaks = 10) +
+    geom_smooth(method = 'lm', alpha = 0.1) +
+                    labs(x = "Obey Percentage", y = "Average Weight") +
+    ggtitle('Obey Percentage and Average Weight')
+```
+
+
+
+* **Scatter Plot of obey and Heterozygosity_x10_4**
+
+```{r}
+scatter <- ggplot(combined_complete, aes(obey, Heterozygosity_x10_4))
+scatter + geom_point() +
+    scale_x_continuous(n.breaks = 10) +
+    geom_smooth(method = 'lm', alpha = 0.1) +
+                    labs(x = "Obey Percentage", y = "Heterozygosity x10.4") +
+    ggtitle('Obey Percentage and Heterozygosity x10.4')
+```
+
+* **Scatter Plot of obey and Heterozygosity_x10_4 colored by average weight**
+
+```{r}
+scatter <- ggplot(combined_complete, aes(obey, Heterozygosity_x10_4, col = avg.weight))
+scatter + geom_point() +
+    scale_x_continuous(n.breaks = 10) +
+    geom_smooth(method = 'lm', alpha = 0.1) +
+                    labs(x = "Obey Percentage", y = "Heterozygosity x10.4") +
+    ggtitle('Obey Percentage and Heterozygosity x10.4')
+```
+
+* **Correlation between obey percentage and avg.weight**
+
+```{r}
+cor.test(combined_df$obey, combined_df$avg.weight, use = "complete.obs")
+```
+Since the correlation is 0.19 and the p-value is 0.39 we can say that the correlation between the two variables is not significant.  Also, the intervals cross 0 so as one goes up the other goes up but then it is reversed.
+
+* **Correlation between obey percentage and Heterozygosity_x10_4**
+
+```{r}
+cor.test(combined_df$obey, combined_df$Heterozygosity_x10_4, use = "complete.obs")
+```
+Since the correlation is 0.09 and the p-value is 0.66 we can say that the correlation between the two variables is not significant.  Also, the intervals cross 0 so as one goes up the other goes up but then it is reversed.
+
+* **Correlation between avg.weight and Heterozygosity_x10_4**
+
+```{r}
+cor.test(combined_df$avg.weight, combined_df$Heterozygosity_x10_4, use = "complete.obs")
+```
+* **Correlation between all variables**
+```{r}
+cor(combined_df[,unlist(lapply(combined_df, is.numeric))], use = "complete.obs")
+```
+
+### Do you plan on incorporating any machine learning techniques to answer your research questions? Explain.
+
+```{r}
+combined_model <- lm(obey ~ avg.weight + avg.height + Heterozygosity_x10_4, data = combined_df)
+
+summary(combined_model)
+```
+Looking at the Adjusted R-squared of -0.37 and all p-values for the variables are not significant it does not look like any other the variables help with the percentage a dog can obey.
+
+### Questions for future steps.
+
+More research would need to be done to find out if any other data can be linked to a dog's intelligence.

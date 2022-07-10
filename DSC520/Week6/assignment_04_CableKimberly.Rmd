@@ -1,0 +1,257 @@
+---
+title: "ASSIGNMENT 4"
+author: "Kimberly Cable"
+date: '2022-04-23'
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+bibliography: bibliography.bib
+---
+
+# Part 1
+
+```{r setup, echo = FALSE}
+## Load the ggplot2 package
+library(ggplot2)
+theme_set(theme_minimal())
+```
+
+## Set the working directory to the root of your DSC 520 directory
+
+```{r directory, echo = FALSE}
+#setwd("/Kim/Data Science/Bellevue Univ/BU_DSC/DSC520/Week6")
+```
+
+## Load the `data/r4ds/heights.csv` to
+
+```{r loadHeightsData, echo = FALSE}
+heights_df <- read.csv("data/r4ds/heights.csv")
+head(heights_df)
+```
+
+# https://ggplot2.tidyverse.org/reference/geom_boxplot.html
+## Create boxplots of sex vs. earn and race vs. earn using `geom_point()` and `geom_boxplot()`
+## sex vs. earn
+
+```{r genderEarningsPlot, echo = FALSE}
+ggplot(heights_df, aes(x = sex, y = earn)) + geom_point()+ geom_boxplot() +
+  labs(x = "Gender", y = "Earnings")
+```
+
+## race vs. earn
+
+```{r raceEarningsPlot, echo = FALSE}
+ggplot(heights_df, aes(x = race, y = earn)) + geom_point() + geom_boxplot() +
+  labs(x = "Race", y = "Earnings")
+```
+
+# https://ggplot2.tidyverse.org/reference/geom_bar.html
+## Using `geom_bar()` plot a bar chart of the number of records for each `sex`
+
+```{r genderCountPlot, echo = FALSE}
+ggplot(heights_df, aes(sex)) + geom_bar() + labs(x = "Gender", y = "Count")
+```
+
+## Using `geom_bar()` plot a bar chart of the number of records for each race
+
+```{r raceCountPlot, echo = FALSE}
+ggplot(heights_df, aes(race)) + geom_bar() + labs(x = "Race", y = "Count")
+```
+
+## Create a horizontal bar chart by adding `coord_flip()` to the previous plot
+
+```{r raceCountFlipPlot, echo = FALSE}
+ggplot(heights_df, aes(race)) + geom_bar() + coord_flip() + 
+  labs(x = "Race", y = "Count")
+```
+
+# https://www.rdocumentation.org/packages/ggplot2/versions/3.3.0/topics/geom_path
+## Load the file `"data/nytimes/covid-19-data/us-states.csv"` and
+## assign it to the `covid_df` dataframe
+
+```{r loadCovidData, echo = FALSE}
+covid_df <- read.csv("data/nytimes/covid-19-data/us-states.csv")
+head(covid_df)
+```
+
+## Parse the date column using `as.Date()`
+
+```{r parseDate, echo = FALSE}
+covid_df$date <- as.Date(covid_df$date)
+head(covid_df)
+```
+
+## Create three dataframes named `california_df`, `ny_df`, and `florida_df`
+## containing the data from California, New York, and Florida
+
+# California
+```{r califCovid, echo = FALSE}
+california_df <- covid_df[ which( covid_df$state == "California"), ]
+head(california_df)
+```
+
+# New York
+```{r newyorkCovid, echo = FALSE}
+ny_df <- covid_df[ which( covid_df$state == "New York"), ]
+head(ny_df)
+```
+
+# Florida
+```{r floridaCovid, echo = FALSE}
+florida_df <- covid_df[ which( covid_df$state == "Florida"), ]
+head(florida_df)
+```
+
+## Plot the number of cases in Florida using `geom_line()`
+
+```{r floridaPlot, echo = FALSE}
+ggplot(data = florida_df, aes(x = date, y = cases, group = 1)) + geom_line() +
+  labs(x = "Date", y = "Cases")
+```
+
+## Add lines for New York and California to the plot
+
+```{r statesPlot, echo = FALSE}
+ggplot(data = florida_df, aes(x = date, group = 1)) +
+  geom_line(aes(y = cases)) +
+  geom_line(data = ny_df, aes(y = cases)) +
+  geom_line(data = california_df, aes(y = cases))
+```
+
+## Use the colors "darkred", "darkgreen", and "steelblue" for Florida, New York, and California
+
+```{r statesPlotColored, echo = FALSE}
+ggplot(data = florida_df, aes(x = date, group = 1)) +
+  geom_line(aes(y = cases), color = "darkred") +
+  geom_line(data = ny_df, aes(y = cases), color = "darkgreen") +
+  geom_line(data = california_df, aes(y = cases), color = "steelblue")
+```
+
+## Add a legend to the plot using `scale_colour_manual`
+## Add a blank (" ") label to the x-axis and the label "Cases" to the y axis
+
+```{r statesPlotColoredLegend, echo = FALSE}
+ggplot(data = florida_df, aes(x = date, group=1)) +
+  geom_line(aes(y = cases, colour = "Florida")) +
+  geom_line(data = ny_df, aes(y = cases, colour="New York")) +
+  geom_line(data = california_df, aes(y = cases, colour="California")) +
+  scale_colour_manual("State",
+                      breaks = c("Florida", "New York", "California"),
+                      values = c("Florida" = "darkred", 
+                                 "New York" = "darkgreen", 
+                                 "California" = "steelblue")) +
+  xlab(" ") + ylab("Cases")
+```
+
+## Scale the y axis using `scale_y_log10()`
+
+```{r statesPlotLog, echo = FALSE}
+ggplot(data = florida_df, aes(x = date, group = 1)) +
+  geom_line(aes(y = cases, colour = "Florida")) +
+  geom_line(data = ny_df, aes(y = cases, colour = "New York")) +
+  geom_line(data = california_df, aes(y = cases, colour = "California")) +
+  scale_colour_manual("State",
+                      breaks = c("Florida", "New York", "California"),
+                      values = c("Florida" = "darkred", 
+                                 "New York" = "darkgreen", 
+                                 "California" = "steelblue")) +
+  xlab(" ") + ylab("Cases") + scale_y_log10()
+```
+
+\newpage
+# Part 2
+# Markdown Basics
+
+## Favorite Foods
+1. Chocolate
+2. King Crab
+3. Maria's Cookies
+
+## Images
+![All Cases (Log Plot)](.\plots\10-all-cases-log.png){width=350px}
+
+## Add a Quote
+>_"Practically perfect in every way"_
+
+## Add an Equation
+$$CDF(x) = 1 - (\frac{x}{x_m})^-\alpha$$
+
+## Add a Footnote
+
+This is a footnote[^1]
+
+[^1]:This is the explanation to the footnote
+
+## Add Citations
+
+* R for Everyone [@lander2014r]
+* Discovering Statistics Using R [@field2012discovering]
+
+# Inline Code
+```{r include = FALSE, fig.align = 'center'}
+# Load ggplot2 package
+library(ggplot2)
+theme_set(theme_minimal())
+
+# Load datasets
+heights_df <- read.csv("data/r4ds/heights.csv")
+covid_df <- read.csv("data/nytimes/covid-19-data/us-states.csv")
+
+covid_df$date <- as.Date(covid_df$date)
+
+california_df <- covid_df[ which( covid_df$state == "California"), ]
+ny_df <- covid_df[ which( covid_df$state == "New York"), ]
+florida_df <- covid_df[ which( covid_df$state == "Florida"), ]
+```
+
+
+## NY Times COVID-19 Data
+```{r covid19, echo = FALSE, fig.align = 'center', fig.width = 6}
+ggplot(data = florida_df, aes(x = date, group = 1)) +
+  geom_line(aes(y = cases, colour = "Florida")) +
+  geom_line(data = ny_df, aes(y = cases, colour = "New York")) +
+  geom_line(data = california_df, aes(y = cases, colour = "California")) +
+  scale_colour_manual("State",
+                      breaks = c("Florida", "New York", "California"),
+                      values = c("Florida" = "darkred", 
+                                 "New York" = "darkgreen", 
+                                 "California" = "steelblue")) +
+  xlab(" ") + ylab("Cases") + scale_y_log10()
+
+```
+
+
+## R4DS Height vs Earnings
+```{r r4ds_height_earnings,  echo = FALSE, fig.align = 'center'}
+ggplot(heights_df, aes(x=height, y=earn, col=sex)) + 
+    geom_point() + ggtitle("Height vs. Earnings") + 
+    xlab("Height (inches)") + ylab("Earnings (Dollars)")
+```
+
+
+# Tables
+```{r include = FALSE}
+name <- c("Aragon", "Bilbo", "Frodo", "Galadriel", "Sam", "Gandalf", "Legolas", "Sauron", "Gollum")
+race <- c("Men", "Hobbit", "Hobbit", "Elf", "Hobbit", "Maia", "Elf", "Maia", "Hobbit")
+in_fellowship <- c(TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE, FALSE)
+ring_bearer <- c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+age <- c(88, 129, 51, 7000, 36, 2019, 2931, 7052, 589)
+
+characters_df <- data.frame(name, race, in_fellowship, ring_bearer, age)
+```
+
+## Knitr Table with Kable
+```{r knitr_table, echo = FALSE}
+knitr::kable(characters_df, caption = "One Ring to Rule Them All")
+```
+
+\newpage
+## Pandoc Table
+```{r pandocTable, echo = FALSE, results = 'asis'}
+library(pander)
+pandoc.table(characters_df)
+```
+
+
+# References

@@ -1,0 +1,535 @@
+---
+title: "Intelligence of Dogs"
+author: "Kimberly Cable"
+date: "06-04-2022"
+output:
+  pdf_document: default
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 60), tidy = TRUE, echo = TRUE)
+```
+
+# Step 1
+
+### Introduction
+
+We all love dogs. Some more than others but all in all, a dog is man's best friend. I think what we enjoy most about our furry companions is their ability to learn. From just being able to fetch a ball and bring it back to helping the police locate missing persons to alerting their companions that they are about to have a seizure. Dogs are amazing animals.
+
+### Research Questions
+
+Studies have been done on which breeds are more intelligent than others, but I was curious if how big a dog was had anything to do with how smart they were.
+
+-   Are bigger dogs smarter than smaller dogs?
+-   Does the classification of a dog really tell their intelligence level?
+-   Does their heterozygosity (diversity in the genes) have anything to do with their intelligence?
+-   Within a classification, do the larger breeds fair better than the smaller ones for intelligence?
+-   Does their heterozygosity influence the number of reps a dog can do?
+
+### Approach
+
+I plan to look at if height, weight and heterozygosity have any affect on how intelligent a dog is based on the percentage of times they can obey a command.
+
+### How your approach addresses (fully or partially) the problem
+
+With my approach I think it would partially answer whether or not how big a dog was and if it plays a part in the how smart they are.
+
+### Data (Minimum of 3 Datasets - but no requirement on number of fields or rows)
+
+-   dog_intelligence.csv [@intelligence]
+-   Table_4\_Heterozygosity_85_breeds.csv [@intelligence]
+-   Table_5\_Expected_Heterozygosity_60_breeds.csv [@intelligence]
+-   AKC Breed Info.csv [@AKCBreeds]
+
+### Required Packages
+
+-   ggplot2
+-   dplyr
+-   magritter
+-   Hmisc
+-   ggm
+
+### Plots and Table Needs
+
+-   Histogram
+-   Scatter Plots
+-   CDF
+-   Linear Regression
+
+### Questions for future steps
+
+To begin, I suppose you look at histograms of the different variables and then decide how to proceed.
+
+# Step 2
+
+### How to import and clean my data
+
+```{r echo = FALSE}
+## Load the ggplot2 package
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(purrr)
+theme_set(theme_minimal())
+```
+
+Load and read each of the datasets:
+
+-   **dog_intelligence.csv**
+
+```{r}
+intelligence_df <- read.csv("Final_Project/data/dog_intelligence.csv", 
+    header = TRUE, 
+    stringsAsFactors = FALSE)
+head(intelligence_df)
+```
+
+-   **AKC Breed Info.csv**
+
+```{r}
+breed_df <- read.csv("Final_Project/data/AKC Breed Info.csv")
+head(breed_df)
+```
+
+-   **Table_4\_Heterozygosity_85_breeds.csv**
+
+```{r}
+heterozygosity_4_df <- read.csv("Final_Project/data/Table_4_Heterozygosity_85_breeds.csv")
+head(heterozygosity_4_df)
+```
+
+-   **Table_5\_Expected_Heterozygosity_60_breeds.csv**
+
+```{r}
+heterozygosity_5_df <- read.csv("Final_Project/data/Table_5_Expected_Heterozygosity_60_breeds.csv")
+colnames(heterozygosity_5_df)[2] <- 'Heterozygosity_x10_4' 
+
+head(heterozygosity_5_df)
+```
+
+**Create New Dataframe from the Intelligence data**
+
+```{r}
+combined_df <- intelligence_df
+
+head(combined_df)
+```
+
+**Inner Join Breed data to new combined df on key Breed**
+
+```{r}
+combined_df <- combined_df %>% 
+    inner_join(breed_df, by = c("Breed" = "Breed"))
+
+head(combined_df)
+```
+
+**Inner Join Heterozygosity 4 to new combined df on key Breed = Population**
+
+```{r}
+combined_df <- combined_df %>% 
+    inner_join(heterozygosity_4_df, by = c("Breed" = "Population"))
+
+head(combined_df)
+```
+
+**Inner Join Heterozygosity 5 to new combined df on key Breed**
+
+```{r}
+combined_df <- combined_df %>% 
+    inner_join(heterozygosity_5_df, by = c("Breed" = "Breed"))
+
+head(combined_df)
+```
+
+**Convert n/a or na to empty cell**
+
+```{r}
+combined_df[combined_df == 'n/a'] <- ''
+combined_df[combined_df == 'na'] <- ''
+```
+
+**Convert obey to numeric**
+
+```{r}
+combined_df$obey <- gsub("%", "", as.character(combined_df$obey)) 
+
+combined_df$obey <- as.numeric(combined_df$obey) / 100
+```
+
+**Convert height and weight to numeric**
+
+```{r}
+combined_df$height_low_inches <- as.numeric(combined_df$height_low_inches)
+combined_df$height_high_inches <- as.numeric(combined_df$height_high_inches)
+combined_df$weight_low_lbs <- as.numeric(combined_df$weight_low_lbs)
+combined_df$weight_high_lbs <- as.numeric(combined_df$weight_high_lbs)
+```
+
+### What does the final data set look like?
+
+Data Dictionary:
+
+```{r echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl <- "
+| Variable      | Meaning  |
+|---------------|:-------------|
+| Breed         | American Kennel Club standard breeds |
+| Classification      | Breed Intelligence Category |
+| obey | Probability that the breed obeys the fuirst command (figure is lower bound) |
+| reps_lower      |  Lower limit of repetitions to understand new commands   |
+| reps_upper      |  Upper limit of repetitions to understand new command   |
+| height_low_inches      | Height in inches - lower limit |
+| height_high_inches      | Height in inches - upper limit |
+| weight_low_lbs      | Weight in pounds - lower limit  |
+| weight_high_lbs      |  Weight in pounds - upper limit  |
+| Heterozygosity      |  Two copies of different alleles   |
+| Heterozygosity_x10_4      |  Two copies of different alleles   |
+"
+cat(tabl)
+```
+
+```{r}
+head(combined_df)
+```
+
+### What information is not self-evident?
+
+-   Initially I do not know exactly what Heterozygosity and Heterozygosity (x10-4) are and the difference between the two columns.
+
+### What are different ways you could look at this data?
+
+One could strictly look at the obey percentage without looking at the number of reps a dog can do. You can also just look at the upper and lower reps versus taking the average number of reps a dog can do. Same problem with height and weight if I were to look at if intelligence is strictly by the weight of a breed or how tall a breed is.
+
+### How do you plan to slice and dice the data?
+
+-   **Add average weight and height to dataframe**
+
+```{r}
+combined_df$avg.weight = rowMeans(
+  combined_df[,c('weight_low_lbs', 'weight_high_lbs')], na.rm = TRUE)
+combined_df$avg.height = rowMeans(
+  combined_df[,c('height_low_inches', 'height_high_inches')], na.rm = TRUE)
+
+head(combined_df)
+```
+
+### How could you summarize your data to answer key questions?
+
+-   **Descriptive Statistics on all variables**
+
+```{r}
+summary(combined_df)
+```
+
+-   **Descriptive Statistics on all variables grouped by Classification**
+
+```{r}
+combined_df %>% 
+  split(.$Classification) %>% 
+  map(summary)
+```
+
+-   **Remove empty cells from variables for plots**
+
+```{r}
+combined_complete <- combined_df[complete.cases(combined_df), ] 
+head(combined_complete)
+```
+
+### What types of plots and tables will help you illustrate the findings to your questions?
+
+```{r}
+ggplot(combined_complete, aes(obey)) + 
+    labs(title = "Histogram Obey Percentage", 
+        x = "Obey Percentage", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$obey, na.rm = TRUE), 
+                              sd = sd(combined_complete$obey, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+```{r}
+ggplot(combined_complete, aes(avg.weight)) + 
+    labs(title = "Histogram Average Weight", 
+        x = "Weight (lbs)", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$avg.weight, na.rm = TRUE), 
+                              sd = sd(combined_complete$avg.weight, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+```{r}
+ggplot(combined_complete, aes(avg.height)) + 
+    labs(title = "Histogram Average Height", 
+        x = "Height (inches)", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$avg.height, na.rm = TRUE), 
+                              sd = sd(combined_complete$avg.height, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+```{r}
+ggplot(combined_complete, aes(Heterozygosity)) + 
+    labs(title = "Histogram Heterozygosity", 
+        x = "Heterozygosity", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$Heterozygosity, na.rm = TRUE), 
+                              sd = sd(combined_complete$Heterozygosity, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+```{r}
+ggplot(combined_complete, aes(Heterozygosity_x10_4)) + 
+    labs(title = "Histogram Heterozygosity_x10_4", 
+        x = "Heterozygosity_x10_4", y = "Frequency") +
+    geom_histogram(bins = 10, aes(y = ..density..), color = "black", fill = "black") +
+    stat_function(fun = dnorm, 
+                  args = list(mean = mean(combined_complete$Heterozygosity_x10_4, na.rm = TRUE), 
+                              sd = sd(combined_complete$Heterozygosity_x10_4, na.rm = TRUE)),
+                              color = 'red', size = 1)
+```
+
+-   **Scatter Plot of obey and avg.weight**
+
+```{r}
+scatter <- ggplot(combined_complete, aes(obey, avg.weight))
+scatter + geom_point() +
+    scale_x_continuous(n.breaks = 10) +
+    geom_smooth(method = 'lm', alpha = 0.1) +
+                    labs(x = "Obey Percentage", y = "Average Weight") +
+    ggtitle('Obey Percentage and Average Weight')
+```
+
+-   **Scatter Plot of obey and avg.weight colored by height**
+
+```{r}
+scatter <- ggplot(combined_complete, aes(obey, avg.weight, col = avg.height))
+scatter + geom_point() +
+    scale_x_continuous(n.breaks = 10) +
+    geom_smooth(method = 'lm', alpha = 0.1) +
+                    labs(x = "Obey Percentage", y = "Average Weight") +
+    ggtitle('Obey Percentage and Average Weight')
+```
+
+-   **Scatter Plot of obey and Heterozygosity_x10_4**
+
+```{r}
+scatter <- ggplot(combined_complete, aes(obey, Heterozygosity_x10_4))
+scatter + geom_point() +
+    scale_x_continuous(n.breaks = 10) +
+    geom_smooth(method = 'lm', alpha = 0.1) +
+                    labs(x = "Obey Percentage", y = "Heterozygosity x10.4") +
+    ggtitle('Obey Percentage and Heterozygosity x10.4')
+```
+
+-   **Scatter Plot of obey and Heterozygosity_x10_4 colored by average weight**
+
+```{r}
+scatter <- ggplot(combined_complete, aes(obey, Heterozygosity_x10_4, col = avg.weight))
+scatter + geom_point() +
+    scale_x_continuous(n.breaks = 10) +
+    geom_smooth(method = 'lm', alpha = 0.1) +
+                    labs(x = "Obey Percentage", y = "Heterozygosity x10.4") +
+    ggtitle('Obey Percentage and Heterozygosity x10.4')
+```
+
+```{r}
+# Plot of Obey Percentage and Breed color coded
+ggplot(combined_complete, aes(x = Breed, y = avg.weight, color = Classification)) +
+    geom_point() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+-   **Correlation between obey percentage and avg.weight**
+
+```{r}
+cor.test(combined_df$obey, combined_df$avg.weight, use = "complete.obs")
+```
+
+Since the correlation is 0.19 and the p-value is 0.39 we can say that the correlation between the two variables is not significant. Also, the intervals cross 0 so as one goes up the other goes up but then it is reversed.
+
+-   **Correlation between obey percentage and Heterozygosity_x10_4**
+
+```{r}
+cor.test(combined_df$obey, combined_df$Heterozygosity_x10_4, use = "complete.obs")
+```
+
+Since the correlation is 0.09 and the p-value is 0.66 we can say that the correlation between the two variables is not significant. Also, the intervals cross 0 so as one goes up the other goes up but then it is reversed.
+
+-   **Correlation between avg.weight and Heterozygosity_x10_4**
+
+```{r}
+cor.test(combined_df$avg.weight, combined_df$Heterozygosity_x10_4, use = "complete.obs")
+```
+
+-   **Correlation between all variables**
+
+```{r}
+cor(combined_df[,unlist(lapply(combined_df, is.numeric))], use = "complete.obs")
+```
+
+
+### Do you plan on incorporating any machine learning techniques to answer your research questions? Explain.
+
+* Regression analysis
+
+```{r}
+combined_model <- lm(obey ~ avg.weight + avg.height + Heterozygosity_x10_4, data = combined_df)
+
+summary(combined_model)
+```
+
+Looking at the Adjusted R-squared of -0.37 and all p-values for the variables are not significant it does not look like any other the variables help with the percentage a dog can obey.
+
+
+### Questions for future steps.
+
+More research would need to be done to find out if any other data can be linked to a dog's intelligence.
+
+# Step 3
+
+## Introduction
+
+We all love dogs. Some more than others but all in all, a dog is man's best friend. I think what we enjoy most about our furry companions is their ability to learn. From just being able to fetch a ball and bring it back to help the police locate missing persons to alerting their companions that they are about to have a seizure. Dogs are amazing animals.
+
+## The problem statement you addressed
+
+With this analysis, I wanted to determine if a dog's size really determines its intelligence level. Are big dogs smarter than smaller dogs? Are they faster at learning commands or is it based on something else?
+
+How I addressed the problem
+
+1.  I looked at 4 datasets to help me determine if the size of a dog determines its intelligence level.
+
+    a.  AKC Breed Information: This dataset contained information such as breed, height and weight
+    b.  Dog Intelligence: This dataset contained information such as breed, classification of intelligence, obey percentage, and upper and lower repetitions a dog could handle
+    c.  Heterozygosity of 85 breeds: This dataset contained information about the breed and heterozygosity
+    d.  Heterozygosity x10_4 of 60 breeds: This dataset contained information about the breed and heterozygosity x10_4.
+
+2.  I combined all 4 datasets into 1 and began to clean up the data and create new variables for average weight and average height.
+
+3.  Did some descriptive statistics
+
+    a.  Obey, Avg Weight, and Avg Height
+
+|        | Obey | Avg Weight | Avg Height |
+|--------|------|------------|------------|
+| Min    | 0.30 | 8.00       | 8.5        |
+| Median | 0.50 | 58.75      | 22.75      |
+| Mean   | 0.58 | 62.84      | 20.59      |
+| Max    | 0.95 | 182.50     | 28.5       |
+
+    b.  By Classification: Obey, Avg Weight, and Avg Height
+
+Brightest Dogs
+
+|        | Obey | Avg Weight | Avg Height |
+|--------|------|------------|------------|
+| Min    | 0.95 | 65.00      | 22.50      |
+| Median | 0.95 | 67.5       | 22.50      |
+| Mean   | 0.95 | 77.5       | 23.17      |
+| Max    | 0.95 | 83.75      | 24.50      |
+
+Excellent Working Dogs
+
+|        | Obey | Avg Weight | Avg Height |
+|--------|------|------------|------------|
+| Min    | 0.85 | 33.0       | 18.00      |
+| Median | 0.85 | 65.0       | 23.50      |
+| Mean   | 0.85 | 65.17      | 22.17      |
+| Max    | 0.85 | 97.5       | 25.00      |
+
+Above Avg Working Dog
+
+|        | Obey | Avg Weight | Avg Height |
+|--------|------|------------|------------|
+| Min    | 0.70 | 40.0       | 17.5       |
+| Median | 0.70 | 65.0       | 26.0       |
+| Mean   | 0.70 | 76.67      | 23.5       |
+| Max    | 0.70 | 95.0       | 27.0       |
+
+Average Working/Obedience Intelligence
+
+|        | Obey | Avg Weight | Avg Height |
+|--------|------|------------|------------|
+| Min    | 0.50 | 14.0       | 8.5        |
+| Median | 0.50 | 41.75      | 19.75      |
+| Mean   | 0.50 | 44.45      | 25.5       |
+| Max    | 0.50 | 100.0      | 28.5       |
+
+Fair Working/Obedience Intelligence
+
+|        | Obey | Avg Weight | Avg Height |
+|--------|------|------------|------------|
+| Min    | 0.30 | 8.0        | 11.5       |
+| Median | 0.30 | 25.0       | 15.5       |
+| Mean   | 0.30 | 64.1       | 18.6       |
+| Max    | 0.30 | 150.0      | 26.5       |
+
+Lowest Degree of Working/Obedience Intelligence
+
+|        | Obey | Avg Weight | Avg Height |
+|--------|------|------------|------------|
+| Min    | NA   | 24.0       | 14.0       |
+| Median | NA   | 65.0       | 20.75      |
+| Mean   | NA   | 84.12      | 21.0       |
+| Max    | NA   | 182.5      | 28.5       |
+
+    c.  Histograms of obey percentage, average weight, average height,
+    Heterozygosity, and Heterozygosity x104
+
+    d.  Scatter plots along of obey percentage vs average weight and obey
+    percentage vs Heterozygosity x10.4
+    
+    e.  Plot of each Breed with the average weight color coded by Classification.
+
+    f.  Correlations:
+
+        i. Obey Percentage vs Average Weight: 
+            Correlation: 0.185; p-value: 0.387
+        ii. Obey Percentage vs Heterozygosity x10.4: 
+            Correlation: 0.09; p-value: 0.669
+        iii. Average Weight vs Heterozygosity x10.4: 
+            Correlation: -0.32; p-value: 0.869
+        
+
+4.  Regression Models
+
+    Obey Percentage with Average Weight + Average height + Heterozygosity x10.4:
+
+    -   R squared: 0.08
+
+    -   Adj R squared: -0.037
+
+    -   F-statistic: 0.725
+
+    -   P-value: 0.549
+
+## Analysis
+
+My preliminary analysis on whether the size of a dog determines its intelligence is as follows:
+
+1.  Looking at the mean of each breed and their classification suggests dogs of all weights can fit into each classification of brightest down to lowest.
+
+2.  The scatterplot of Obey Percentage and Average Weight does show a slight upwards trend between a dog's obey percentage and their average weight suggesting maybe their weight does play some role in their intelligence.
+
+3.  Looking at the plot of Breed and average weight, it shows that the different classifications of intelligence has an average weight all over the spectrum.  This suggests that the average weight of a breed has no correlation to their intelligence.  
+
+4.  The correlations between the variables all suggested very low relationships between the various variables suggesting that the dog's obey percentage isn't influenced by its size or Heterozygosity.
+
+5.  Running a multiple linear regression model to see if average height, average weight, and Heterozygosity x10_4 have any influence on the obey percentage of a dog suggests that all variables do not influence the obey percentage very much if at all.
+
+
+## Implications
+
+As the size of a dog does not seem to influence how smart they are, I do not see any evil scientist manipulating dog genetics to increase the size of a dog to make them smarter.
+
+## Concluding Remarks
+
+With the limited initial research on if size influences a dog's intelligence, more research would need to be done to find out what, if any, genetics or factors lead to a breeds intelligence level.
+
+# References

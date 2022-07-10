@@ -1,0 +1,56 @@
+---
+title: "Intelligence of Dogs"
+author: "Kimberly Cable"
+date: "05-14-2022"
+output:
+  pdf_document: default
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Final Project - Step 1
+
+### Introduction
+We all love dogs. Some more than others but all in all, a dog is man's best friend. I think what we enjoy most about our furry companions is their ability to learn. From just being able to fetch a ball and bring it back to helping the  police locate missing persons to alerting their companions that they are about to have a seizure. Dogs are amazing animals.
+
+### Research Questions
+Studies have been done on which breeds are more intelligent than others, but I was curious if how big a dog was had anything to do with how smart they were.
+
+* Are bigger dogs smarter than smaller dogs?
+* Does the classification of a dog really tell their intelligence level?
+* Does their heterozygosity (diversity in the genes) have anything to do with their intelligence?
+* Within a classification, do the larger breeds fair better than the smaller ones for intelligence?
+* Does their heterozygosity influence the number of reps a dog can do?
+
+### Approach
+I plan to look at if height, weight and heterozygosity have any affect on how intelligent a dog is based on the percentage of times they can obey a command.
+
+### How your approach addresses (fully or partially) the problem
+With my approach I think it would partially answer whether or not how big a dog was and if it plays a part in the how smart they are.
+
+### Data (Minimum of 3 Datasets - but no requirement on number of fields or rows)
+* dog_intelligence.csv [@intelligence]
+* Table_4_Heterozygosity_85_breeds.csv [@intelligence]
+* Table_5_Expected_Heterozygosity_60_breeds.csv [@intelligence]
+* AKC Breed Info.csv [@AKCBreeds]
+
+### Required Packages
+* ggplot2
+* dplyr
+* magritter
+* Hmisc
+* ggm
+
+### Plots and Table Needs
+* Histogram
+* Scatter Plots
+* CDF
+* Linear Regression
+
+### Questions for future steps
+To begin, I suppose you look at histograms of the different variables and then decide how to proceed.
+
+# References

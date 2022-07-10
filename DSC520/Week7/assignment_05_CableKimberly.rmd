@@ -1,0 +1,222 @@
+---
+title: 'Week 7: Assignments 7.2.1 and 7.2.2'
+author: "Kimberly Cable"
+date: "April 30 2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+## Assignment 7.2.1
+
+```{r setup1, include = FALSE}
+
+getwd()
+
+## Load the `data/r4ds/heights.csv` to
+heights_df <- read.csv("data/r4ds/heights.csv")
+head(heights_df)
+
+```
+
+```{r cor}
+
+## Using `cor()` compute correlation coefficients for
+## height vs. earn
+cor(heights_df$height, heights_df$earn)
+
+### age vs. earn
+cor(heights_df$age, heights_df$earn)
+
+### ed vs. earn
+cor(heights_df$ed, heights_df$earn)
+
+```
+
+```{r spuriousCor}
+
+## Spurious correlation
+## The following is data on US spending on science, space, and technology in millions of 
+## today's dollars and Suicides by hanging strangulation and suffocation for the years \
+## 1999 to 2009 
+## Compute the correlation between these variables
+tech_spending <- c(18079, 18594, 19753, 20734, 20831, 23029, 23597, 23584, 25525, 27731, 29449)
+suicides <- c(5427, 5688, 6198, 6462, 6635, 7336, 7248, 7491, 8161, 8578, 9000)
+cor(tech_spending, suicides)
+
+```
+
+\newpage
+## Assignment 7.2.2
+
+**As a data science intern with newly learned knowledge in skills in statistical correlation and R programming, you will analyze the results of a survey recently given to college students. You learn that the research question being investigated is: "Is there a significant relationship between the amount of time spent reading and the time spent watching television?" You are also interested if there are other significant relationships that can be discovered?**
+
+```{r setup2, include = FALSE}
+
+library(Hmisc)
+library(ggm)
+
+## Load the `data/student-survey.csv` to
+studentSurvey_df <- read.csv("data/student-survey.csv")
+
+```
+
+**Student Survey: first 5 rows:**
+
+```{r studentData, echo = FALSE}
+
+studentSurvey_df$TimeTV <- studentSurvey_df$TimeTV / 60
+head(studentSurvey_df)
+
+```
+
+### Question: *i*
+
+**Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.**
+
+```{r studentCor, echo = FALSE}
+
+cov(studentSurvey_df)
+
+```
+
+The covariance is the indication if two variables are linearly related. You would use this information to determine the best correlation method to use.
+
+-   Time Reading and Time TV: Negative linear relationship
+-   Time Reading and Happiness: Negative linear relationship
+-   Time Reading and Gender: Negative linear relationship
+-   Time TV and Happiness: Positive linear relationship
+-   Time TV and Gender: Positive linear relationship
+-   Happiness and Gender: Positive linear relationship
+
+### Question: *ii*
+
+**Examine the Survey data variables.**
+
+**What measurement is being used for the variables?**
+
+- TimeReading (integer) - number of minutes converted from number of hours
+- TimeTV (integer) - number of minutes 
+- Happiness (double) - percentage 
+- Gender (integer) - categorical conversion to 1 and 0
+
+**Explain what effect changing the measurement being used for the variables would have on the covariance calculation.**
+
+Since the columns are all of a different measure trying to change them to the same measurement may be difficult. Gender for instance cannot be changed to number of minutes or hours.
+
+**Would this be a problem? Explain and provide a better alternative if needed.**
+
+Since you are trying basically to compare apples and oranges a better alternative is to standardize the comparison using the standard deviation of each of the variables to make them on the same playing field easier to compare.
+
+### Question: *iii*
+
+**Choose the type of correlation test to perform, explain why you chose this test, and make a prediction if the test yields a positive or negative correlation?**
+
+Because Time Reading and Time TV are both intervals, I will be using the Pearson correlation method. I think the test will be negative as the more time you either read or watch tv the less time you do the other.
+
+### Question: *iv*
+
+**Perform a correlation analysis of:**
+
+**1. All variables**
+
+Correlation between the Student Survey variables
+
+```{r allVariables, echo = FALSE}
+
+cor(studentSurvey_df)
+
+```
+
+**2. A single correlation between two a pair of the variables**
+
+Pearson's Correlation Coefficient between Time Reading and Happiness with a 95% confidence level
+
+```{r singleCorrelation, echo = FALSE}
+
+cor.test(studentSurvey_df$TimeReading, studentSurvey_df$Happiness)
+
+```
+
+**3. Repeat your correlation test in step 2 but set the confidence interval at 99%**
+
+Pearson's Correlation Coefficient between Time Reading and Happiness with a 99% confidence level
+
+```{r conf99, echo = FALSE}
+
+cor.test(studentSurvey_df$TimeReading, studentSurvey_df$Happiness, conf.level = 0.99)
+
+```
+
+**4. Describe what the calculations in the correlation matrix suggest about the relationship between the variables. Be specific with your explanation.**
+
+Since the correlation coefficient is -0.43 and the p-value is 0.18, this suggests that they are negatively correlated. When one variable increases the other variable decreases. Since the p-value is greater than 0.05, we reject the null hypothesis that the two variables are not related.
+
+### Question: *v*
+
+**Calculate the correlation coefficient and the coefficient of determination, describe what you conclude about the results.**
+
+Correlation Coefficient between Time Reading and Time TV
+
+```{r corrCoef, echo = FALSE}
+
+# Correlation Coefficient
+corrCoefficient <- cor(studentSurvey_df$TimeReading, studentSurvey_df$TimeTV)
+corrCoefficient
+
+```
+
+Coefficient of Determination between Time Reading and Time TV
+
+```{r coefDeterm, echo = FALSE}
+
+# Coefficient of Determination
+coefDetermination <- cor(studentSurvey_df$TimeReading, studentSurvey_df$TimeTV)^2
+coefDetermination
+
+```
+
+The Correlation Coefficient is -0.88 and the Coefficient of Determination is 78%
+
+We can say that Time Watching TV shares 78% of the variability of Time Reading and 22% does not.
+
+### Question: *vi*
+
+**Based on your analysis can you say that watching more TV caused students to read less? Explain.**
+
+Watching TV is only about 78% responsible for students to read less but there is also another 22% of something else that cause students not to read.
+
+### Question: *vii*
+
+**Pick three variables and perform a partial correlation, documenting which variable you are "controlling". Explain how this changes your interpretation and explanation of the results.**
+
+I am seeing if Gender is controlling the relationship between Time Watching TV and Time Reading.
+
+Partial Correlation between Time Reading and Time TV with Gender as the controlling factor
+
+```{r partialCorr, echo = FALSE}
+
+# Partial Correlation
+partialCorr <- pcor(c("TimeReading", "TimeTV", "Gender"), var(studentSurvey_df))
+partialCorr
+
+```
+
+Coefficient of Determination between Time Reading and Time TV with Gender as the controlling factor
+
+```{r partialCorrSq, echo = FALSE}
+partialCorr^2
+```
+
+Significance of the partial Correlation between Time Reading and Time TV with Gender as the controlling factor.
+
+```{r partialCorrtest, echo = FALSE}
+pcor.test(partialCorr, 1, 11)
+```
+
+Looking at the correlation and coefficient with gender as the controlling factor tells me that neither being
+female or male has any effect on the relationship between Time Reading and Time TV.
+
+## References

@@ -1,0 +1,188 @@
+---
+title: "Week 10"
+author: "Kimberly Cable"
+date: "05-14-2022"
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Fit a Logistic Regression Model to Thoracic Surgery Binary Dataset
+
+## a. For this problem, you will be working with the thoracic surgery data set from the University of California Irvine machine learning repository. This dataset contains information on life expectancy in lung cancer patients after surgery. The underlying thoracic surgery data is in ARFF format. This is a text-based format with information on each of the attributes. You can load this data using a package such as foreign or by cutting and pasting the data section into a CSV file.
+
+```{r, echo = FALSE}
+library(farff)
+library(mlogit)
+library(caTools)
+```
+
+```{r}
+thoracic_df <- readARFF('data/ThoraricSurgery.arff' )
+
+head(thoracic_df)
+```
+
+__Data Dictionary:__
+
+1. DGN: Diagnosis - specific combination of ICD-10 codes for primary and secondary as well multiple tumours if any (DGN3,DGN2,DGN4,DGN6,DGN5,DGN8,DGN1)
+2. PRE4: Forced vital capacity - FVC (numeric)
+3. PRE5: Volume that has been exhaled at the end of the first second of forced expiration - FEV1 (numeric)
+4. PRE6: Performance status - Zubrod scale (PRZ2,PRZ1,PRZ0)
+5. PRE7: Pain before surgery (T,F)
+6. PRE8: Haemoptysis before surgery (T,F)
+7. PRE9: Dyspnoea before surgery (T,F)
+8. PRE10: Cough before surgery (T,F)
+9. PRE11: Weakness before surgery (T,F)
+10. PRE14: T in clinical TNM - size of the original tumour, from OC11 (smallest) to OC14 (largest) (OC11,OC14,OC12,OC13)
+11. PRE17: Type 2 DM - diabetes mellitus (T,F)
+12. PRE19: MI up to 6 months (T,F)
+13. PRE25: PAD - peripheral arterial diseases (T,F)
+14. PRE30: Smoking (T,F)
+15. PRE32: Asthma (T,F)
+16. AGE: Age at surgery (numeric)
+17. Risk1Y: 1 year survival period - (T)rue value if died (T,F)
+
+
+## b. Assignment Instructions:
+
+### i. Fit a binary logistic regression model to the data set that predicts whether or not the patient survived for one year (the Risk1Y variable) after the surgery. Use the glm() function to perform the logistic regression. See Generalized Linear Models for an example. Include a summary using the summary() function in your results.
+
+```{r}
+thoracic.model <- glm(Risk1Yr ~ DGN + PRE4 + PRE5 + PRE6 + PRE7 + PRE8 + 
+                           PRE9 + PRE10 + PRE11 + PRE14 + PRE17 + PRE19 +
+                           PRE25 + PRE30 + PRE32 + AGE, data = thoracic_df, 
+                      family = binomial())
+
+summary(thoracic.model)
+```
+### ii. According to the summary, which variables had the greatest effect on the survival rate?
+With a probability level of about 0 DGN5 has the greatest effect on living for at least 1 year. PRE14OC14 & PRE9F  was next with a probability of 0.001 then DSG8, PRE17F, and PRE30F all having probability levels of about 0.01. Finally, PRE6PRZ1 and PRE14OC13 had levels under 0.05.
+
+### iii. To compute the accuracy of your model, use the dataset to predict the outcome variable. The percent of correct predictions is the accuracy of your model. What is the accuracy of your model?
+
+Split the data into training and validation data sets
+
+```{r}
+split <- sample.split(thoracic_df, SplitRatio = 0.8)
+
+split
+```
+
+```{r}
+train <- subset(thoracic_df, split == "TRUE")
+validate <- subset(thoracic_df, split == "FALSE")
+```
+
+Train model using training data set
+
+```{r}
+thoracic.train <- glm(Risk1Yr ~ DGN + PRE4 + PRE5 + PRE6 + PRE7 + PRE8 + PRE9 + PRE10 + 
+                PRE11 + PRE14 + PRE17 + PRE19 + PRE25 + PRE30 + PRE32 + AGE, 
+            data = train, family = binomial()  )
+
+summary(thoracic.train)
+```
+
+Run validation data through the model built on training data
+
+```{r}
+res <- predict(thoracic.train, validate, type = "response")
+
+res
+```
+
+```{r}
+res2 <-predict(thoracic.train, train, type = "response")
+
+res2
+```
+
+Validate model using confusion matrix
+
+```{r}
+confmatrix <- table(Actual_Value = train$Risk1Yr, Predicted_Value = res2 > 0.5)
+
+confmatrix
+```
+Accuracy
+```{r}
+(confmatrix[[1,1]] + confmatrix[[2,2]]) / sum(confmatrix)
+```
+
+
+# 2. Fit a Logistic Regression Model
+
+```{r}
+## Load the binary classifier data
+binary_df <- read.csv("data/binary-classifier-data.csv", 
+    header = TRUE, 
+    stringsAsFactors = FALSE)
+
+head(binary_df)
+```
+
+## a. Fit a logistic regression model to the binary-classifier-data.csv dataset
+```{r}
+binary.model <- glm(label ~ x + y, 
+                       data = binary_df, family = binomial())
+summary(binary.model)
+```
+
+## b. The dataset (found in binary-classifier-data.csv) contains three variables; label, x, and y. The label variable is either 0 or 1 and is the output we want to predict using the x and y variables.
+
+### i. What is the accuracy of the logistic regression classifier?
+
+Split the data into training and validation data sets
+
+```{r}
+split <- sample.split(binary_df, SplitRatio = 0.8)
+
+split
+```
+
+```{r}
+train <- subset(binary_df, split == "TRUE")
+validate <- subset(binary_df, split == "FALSE")
+```
+
+Train model using training data set
+
+```{r}
+binary.train <- glm(label ~ x + y, data = train, family = binomial()  )
+
+summary(binary.train)
+```
+
+Run validation data through the model built on training data
+
+```{r}
+res <- predict(binary.train, validate, type = "response")
+
+res
+```
+
+```{r}
+res2 <-predict(binary.train, train, type = "response")
+
+res2
+```
+
+Validate model using confusion matrix
+
+```{r}
+confmatrix <- table(Actual_Value = train$label, Predicted_Value = res2 > 0.5)
+
+confmatrix
+```
+
+Accuracy
+
+```{r}
+(confmatrix[[1,1]] + confmatrix[[2,2]]) / sum(confmatrix)
+```
+
+### ii. Keep this assignment handy, as you will be comparing your results from this week to next week.
