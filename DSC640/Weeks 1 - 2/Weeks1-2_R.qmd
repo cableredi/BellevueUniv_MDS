@@ -1,0 +1,206 @@
+---
+title: "R Charts"
+format: 
+    pdf:
+        toc: false
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# Load Libraries
+
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+
+theme_set(theme_classic())
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+## Datasets
+
+### Hotdog Contest Winners
+
+```{r}
+#| label: loadhotdog
+#| echo: false
+
+hotdog_winners_df <- read_excel("data/hotdog-contest-winners.xlsm")
+
+hotdog_winners_df <- hotdog_winners_df %>% 
+  rename_with(~ gsub(" ","_", .x), contains(" "))
+
+head(hotdog_winners_df)
+```
+
+### Obama Approval Ratings
+
+```{r}
+#| label: loadobama
+#| echo: false
+
+obama_df <- read_excel("data/obama-approval-ratings.xls")
+
+head(obama_df)
+```
+
+## Charts
+
+### 1. Bar Chart
+
+```{r}
+#| label: barchart
+#| fig-width: 6.5
+
+# Highlight record years with color
+fill_colors <- c()
+
+for ( i in 1:length(hotdog_winners_df$New_record) ) {
+	if (hotdog_winners_df$New_record[i] == 1) {
+		fill_colors <- c(fill_colors, "#74cdf9")
+	} else {
+		fill_colors <- c(fill_colors, "#e5e7e4")
+	}
+}
+
+fig <- plot_ly(hotdog_winners_df, x = ~Year, y = ~Dogs_eaten, type = 'bar',
+        marker = list(color = fill_colors, hoverinfo = 'none'))
+
+fig <- fig %>% 
+    layout(
+        title = "Bar Chart - R \nHotdog Eating Contest \nWinning Number of Hotdogs Eaten",
+        xaxis = list(showgrid = FALSE, 
+                     title = ""), 
+        yaxis = list(showgrid = FALSE, 
+                     title = "Hotdogs Eaten",
+                     titlefont = list(size = 22)),
+        margin = list(l = 5, r = 5, b = 10, t = 30, pad = 10)
+    )
+
+export(fig, file = "images/barchart-r.png")
+```
+
+### 2. Stacked Bar Chart
+
+```{r}
+#| label: stackedchart
+#| fig-width: 4.5
+
+names <-  obama_df$Issue
+
+top_labels <- c('Approve', 'Disapprove', 'None')
+
+fig <- plot_ly(obama_df, x = ~Approve, y = ~names, type = 'bar', 
+               orientation = 'h', marker = list(color = '#46b715', 
+                                                line = list(color = '#ffffff', 
+                                                            width = 1.5))) 
+fig <- fig %>% add_trace(x = ~Disapprove, marker = list(color = '#cc0000')) 
+fig <- fig %>% add_trace(x = ~None, marker = list(color = '#bcbcbc')) 
+
+fig <- fig %>% 
+    layout(xaxis = list(title = "",
+                showgrid = FALSE,
+                showline = FALSE,
+                showticklabels = TRUE,
+                zeroline = FALSE,
+                domain = c(0.15, 1)),
+    yaxis = list(title = "",
+                showgrid = FALSE,
+                showline = FALSE,
+                showticklabels = FALSE,
+                zeroline = FALSE,
+                categoryorder = 'category descending'),
+    barmode = 'stack',
+    showlegend = FALSE,
+    title = "Stacked Bar Chart - R \nObama Approval Percentages per Issue",
+    autosize = F,
+    margin = list(l = 70, r = 5, b = 5, t = 120, pad = 10)
+    )
+
+# labeling the y-axis
+fig <- fig %>% 
+    add_annotations(xref = 'paper',
+                  yref = names, x = 0.14, 
+                  y = names,
+                  xanchor = 'right',
+                  text = names,
+                  font = list(family = 'Arial', size = 14,
+                            color = '#000000'),
+                  showarrow = FALSE, align = 'right')
+
+# label top titles
+fig <- fig %>% 
+    add_annotations(xref = 'x', yref = 'paper',
+                  x = c(43 / 2, 45 + 42 / 2, 43 + 42 + 21 / 2),
+                  y = 1.07,
+                  text = top_labels,
+                  font = list(family = 'Arial', size = 12,
+                              color = '#000000'),
+                  showarrow = FALSE)
+
+export(fig, file = "images/stackedbarchart-r.png")
+```
+
+### 2. Pie Chart
+
+```{r}
+#| label: piechart
+#| fig-width: 6.5
+
+# Get the counts for each country
+countries = dplyr::count(hotdog_winners_df, Country, sort = FALSE)
+
+# plot pie chart
+fig <- plot_ly(countries, labels = ~Country, values = ~n, type = 'pie',
+               textinfo = 'percent', insidetextorientation = 'radial')
+
+fig <- fig %>% 
+    layout(title = 'Pie Chart - R \n Percentage of Wins per Country 1980 - 2010',
+        xaxis = list(showgrid = FALSE, 
+                  zeroline = FALSE, 
+                  showticklabels = FALSE),
+        yaxis = list(showgrid = FALSE, 
+                  zeroline = FALSE, 
+                  showticklabels = FALSE),
+        autosize = F,
+        margin = list(l = 5, r = 5, b = 5, t = 120, pad = 10)
+    )
+
+export(fig, "images/piechart-r.png")
+```
+
+### 4. Donut Chart
+
+```{r}
+#| label: donutchart
+#| fig-width: 6.5
+
+# Get the counts for each country
+countries = dplyr::count(hotdog_winners_df, Country, sort = FALSE)
+
+# plot pie chart
+fig <- plot_ly(countries, labels = ~Country, values = ~n)
+
+fig <- fig %>% 
+    add_pie(hole = 0.6)
+
+fig <- fig %>% 
+    layout(title = 'Donut Chart - R \n Percentage of Wins per Country 1980 - 2010',
+        xaxis = list(showgrid = FALSE, 
+                  zeroline = FALSE, 
+                  showticklabels = FALSE),
+        yaxis = list(showgrid = FALSE, 
+                  zeroline = FALSE, 
+                  showticklabels = FALSE),
+        autosize = F,
+        margin = list(l = 5, r = 5, b = 5, t = 120, pad = 10)
+    )
+
+export(fig, "images/donutchart-r.png")
+
+```

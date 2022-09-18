@@ -1,0 +1,86 @@
+---
+title: "R Charts"
+format: 
+    pdf:
+        toc: false
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# Load Libraries
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+
+theme_set(theme_classic())
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+## Datasets
+
+### World population
+
+```{r}
+#| label: loadpopulation
+#| echo: false
+
+population_df <- read_excel("data/world-population.xlsm")
+
+head(population_df)
+```
+
+## Charts
+
+### 1. Line Chart
+
+```{r}
+#| label: linechart
+#| fig-width: 6.5
+
+fig <- plot_ly(population_df, x = ~Year, y = ~Population, 
+               type = 'scatter', mode = 'lines')
+
+fig <- fig %>% 
+    layout(
+        title = "Line Chart - R \nWorld Population per Year",
+        xaxis = list(showgrid = FALSE, 
+                     title = ""), 
+        yaxis = list(showgrid = FALSE, 
+                     title = "Population (billions)",
+                     titlefont = list(size = 22)),
+        margin = list(l = 5, r = 5, b = 10, t = 30, pad = 10)
+    )
+
+
+export(fig, file = "images/linechart-r.png")
+```
+
+### 1. Step Chart
+
+```{r}
+#| label: stepchart
+#| fig-width: 6.5
+
+fig <- plot_ly(population_df, x = ~Year, y = ~Population,
+               mode = "lines", type = 'scatter',
+               line = list(shape = "hv"))
+
+fig <- fig %>% 
+    layout(
+        title = "Step Chart - R \nWorld Population per Year",
+        xaxis = list(showgrid = FALSE, 
+                     title = ""), 
+        yaxis = list(showgrid = FALSE, 
+                     title = "Population (billions)",
+                     titlefont = list(size = 22)),
+        margin = list(l = 5, r = 5, b = 10, t = 30, pad = 10)
+    )
+
+
+export(fig, file = "images/stepchart-r.png")
+```
