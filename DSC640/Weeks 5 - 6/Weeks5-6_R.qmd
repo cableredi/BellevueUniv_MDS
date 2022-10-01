@@ -1,0 +1,131 @@
+---
+title: "R Charts"
+format: 
+    pdf:
+        toc: false
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# Load Libraries
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(treemapify)
+
+theme_set(theme_classic())
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+## Datasets
+
+### World population
+
+```{r}
+#| label: loadunemployment
+#| echo: false
+
+unemployment_df <- read.csv("data/unemployement-rate-1948-2010.csv")
+
+head(unemployment_df)
+```
+
+```{r}
+#| label: loadexpenditures
+#| echo: false
+
+expenditures_df <- read.table("data/expenditures.txt",
+                              sep="\t", header=TRUE)
+
+head(expenditures_df)
+```
+
+## Charts
+
+### 1. Treemap Chart
+
+```{r}
+#| label: topcategories
+
+category_year <- expenditures_df %>%
+    group_by(category) %>%  
+    summarise(top = sum(expenditure)) %>% 
+    arrange(desc(top)) %>% 
+    top_n(7)
+
+category_year
+```
+
+```{r}
+#| label: treemap
+#| fig-width: 6.5
+
+fig <- ggplot(category_year, aes(area = top, fill = category, label = category)) +
+    geom_treemap() +
+    geom_treemap_text(colour = "black", min.size = 0.3,
+                    place = "centre", padding.x = grid::unit(3, "mm"), padding.y = grid::unit(3, "mm")) +
+    theme(legend.position = "none") +
+    scale_fill_brewer(palette = "Blues") +
+    ggtitle("Treemap - R \nTop 7 Categories by Expenditure")
+
+ggsave("images/treemap-r.png")
+```
+
+### 1. Area Chart
+
+```{r}
+#| label: expenditure per year for sex = 1
+
+expenditures_per_year <- expenditures_df %>%
+    group_by(year) %>%  
+    summarise_at(vars(expenditure), sum)
+
+expenditures_per_year
+```
+
+```{r}
+#| label: areachart
+#| fig-width: 6.5
+
+fig <- ggplot(expenditures_per_year, aes(x = year, y = expenditure)) +
+    geom_area(fill = "lightblue") +
+    ggtitle("Area Chart - R \n1984 - 2008 Expenditures") +
+    xlab('') + 
+    ylab("Expenditures") +
+    scale_x_continuous(breaks = c(1985, 1990, 1995, 2000, 2005))
+
+ggsave("images/area-chart-r.png")
+```
+
+### 1. Stacked Area Chart
+
+```{r}
+#| label: yearcharacter
+ 
+unemployment_df$Year <- as.character(unemployment_df$Year)
+years <- c("2007", "2008", "2009")
+
+three_years <- filter(unemployment_df, Year %in% years)
+
+three_years
+```
+
+```{r}
+#| label: stackedareachart
+#| fig-width: 6.5
+
+fig <- ggplot(three_years, aes(x = Period, y = Value, fill = Year, group = Year)) + 
+    geom_area(position = 'stack') +
+    ggtitle("Stacked Area Chart - R \n2007 - 2009 Unemployment Rates") +
+    xlab('') + 
+    scale_x_discrete(labels=c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 
+                              'Aug', 'Sep', 'Oct', 'Nov', 'Dec')) +
+    ylab("Unemployment Rates") +
+    scale_fill_manual(values = c('lightblue', 'royalblue', 'blue'))
+
+ggsave("images/stacked-area-chart-r.png")
+```

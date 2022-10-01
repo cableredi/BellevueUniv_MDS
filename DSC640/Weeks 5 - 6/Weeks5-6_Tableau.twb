@@ -1,0 +1,790 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20222.22.0812.0353                               -->
+<workbook original-version='18.1' source-build='2022.2.1 (20222.22.0812.0353)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <SortTagCleanup />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource caption='expenditures' inline='true' name='federated.0hpn7vh1e1hp9913xrm390ccd487' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='expenditures' name='textscan.19okbqu1v6evii1ax4k5i1rcu931'>
+            <connection class='textscan' directory='C:/Users/Osgiliath/DataScience/DSC640/Weeks 5 - 6/data' filename='expenditures.txt' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='textscan.19okbqu1v6evii1ax4k5i1rcu931' name='expenditures.txt' table='[expenditures#txt]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator='&#9;'>
+            <column datatype='integer' name='year' ordinal='0' />
+            <column datatype='string' name='category' ordinal='1' />
+            <column datatype='integer' name='expenditure' ordinal='2' />
+            <column datatype='integer' name='sex' ordinal='3' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='textscan.19okbqu1v6evii1ax4k5i1rcu931' name='expenditures.txt' table='[expenditures#txt]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator='&#9;'>
+            <column datatype='integer' name='year' ordinal='0' />
+            <column datatype='string' name='category' ordinal='1' />
+            <column datatype='integer' name='expenditure' ordinal='2' />
+            <column datatype='integer' name='sex' ordinal='3' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[expenditures.txt]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;\\t&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='record-delimiter'>&quot;\\r&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>year</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[year]</local-name>
+            <parent-name>[expenditures.txt]</parent-name>
+            <remote-alias>year</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[expenditures.txt_F2D71E53A718499EA4DF8CCB23F17675]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>category</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[category]</local-name>
+            <parent-name>[expenditures.txt]</parent-name>
+            <remote-alias>category</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[expenditures.txt_F2D71E53A718499EA4DF8CCB23F17675]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>expenditure</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[expenditure]</local-name>
+            <parent-name>[expenditures.txt]</parent-name>
+            <remote-alias>expenditure</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[expenditures.txt_F2D71E53A718499EA4DF8CCB23F17675]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>sex</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[sex]</local-name>
+            <parent-name>[expenditures.txt]</parent-name>
+            <remote-alias>sex</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[expenditures.txt_F2D71E53A718499EA4DF8CCB23F17675]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <_.fcp.ObjectModelTableType.true...column caption='expenditures.txt' datatype='table' name='[__tableau_internal_object_id__].[expenditures.txt_F2D71E53A718499EA4DF8CCB23F17675]' role='measure' type='quantitative' />
+      <column caption='Category' datatype='string' name='[category]' role='dimension' type='nominal' />
+      <column caption='Expenditure' datatype='integer' name='[expenditure]' role='measure' type='quantitative' />
+      <column caption='Sex' datatype='integer' name='[sex]' role='measure' type='quantitative' />
+      <column caption='Year' datatype='integer' name='[year]' role='dimension' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='expenditures.txt' id='expenditures.txt_F2D71E53A718499EA4DF8CCB23F17675'>
+            <properties context=''>
+              <relation connection='textscan.19okbqu1v6evii1ax4k5i1rcu931' name='expenditures.txt' table='[expenditures#txt]' type='table'>
+                <columns character-set='UTF-8' header='yes' locale='en_US' separator='&#9;'>
+                  <column datatype='integer' name='year' ordinal='0' />
+                  <column datatype='string' name='category' ordinal='1' />
+                  <column datatype='integer' name='expenditure' ordinal='2' />
+                  <column datatype='integer' name='sex' ordinal='3' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+    <datasource caption='unemployement-rate-1948-2010' inline='true' name='federated.0f0w2m401tn06l1akt6zg0wvky0q' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='unemployement-rate-1948-2010' name='textscan.0iounmc10jzhie12hujjl1o08z4n'>
+            <connection class='textscan' directory='C:/Users/Osgiliath/DataScience/DSC640/Weeks 5 - 6/data' filename='unemployement-rate-1948-2010.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='textscan.0iounmc10jzhie12hujjl1o08z4n' name='unemployement-rate-1948-2010.csv' table='[unemployement-rate-1948-2010#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='Series id' ordinal='0' />
+            <column datatype='integer' name='Year' ordinal='1' />
+            <column datatype='string' name='Period' ordinal='2' />
+            <column datatype='real' name='Value' ordinal='3' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='textscan.0iounmc10jzhie12hujjl1o08z4n' name='unemployement-rate-1948-2010.csv' table='[unemployement-rate-1948-2010#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='Series id' ordinal='0' />
+            <column datatype='integer' name='Year' ordinal='1' />
+            <column datatype='string' name='Period' ordinal='2' />
+            <column datatype='real' name='Value' ordinal='3' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[unemployement-rate-1948-2010.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Series id</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Series id]</local-name>
+            <parent-name>[unemployement-rate-1948-2010.csv]</parent-name>
+            <remote-alias>Series id</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[unemployement-rate-1948-2010.csv_862AEC1101D2459294CE4FCF6EDB641E]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Year</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[Year]</local-name>
+            <parent-name>[unemployement-rate-1948-2010.csv]</parent-name>
+            <remote-alias>Year</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[unemployement-rate-1948-2010.csv_862AEC1101D2459294CE4FCF6EDB641E]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Period</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[Period]</local-name>
+            <parent-name>[unemployement-rate-1948-2010.csv]</parent-name>
+            <remote-alias>Period</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[unemployement-rate-1948-2010.csv_862AEC1101D2459294CE4FCF6EDB641E]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Value</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Value]</local-name>
+            <parent-name>[unemployement-rate-1948-2010.csv]</parent-name>
+            <remote-alias>Value</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[unemployement-rate-1948-2010.csv_862AEC1101D2459294CE4FCF6EDB641E]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='string' name='[Period]' role='dimension' type='nominal'>
+        <aliases>
+          <alias key='&quot;M01&quot;' value='Jan' />
+          <alias key='&quot;M02&quot;' value='Feb' />
+          <alias key='&quot;M03&quot;' value='Mar' />
+          <alias key='&quot;M04&quot;' value='Apr' />
+          <alias key='&quot;M05&quot;' value='May' />
+          <alias key='&quot;M06&quot;' value='Jun' />
+          <alias key='&quot;M07&quot;' value='Jul' />
+          <alias key='&quot;M08&quot;' value='Aug' />
+          <alias key='&quot;M09&quot;' value='Sep' />
+          <alias key='&quot;M10&quot;' value='Oct' />
+          <alias key='&quot;M11&quot;' value='Nov' />
+          <alias key='&quot;M12&quot;' value='Dec' />
+        </aliases>
+      </column>
+      <column datatype='integer' name='[Year]' role='dimension' type='quantitative' />
+      <_.fcp.ObjectModelTableType.true...column caption='unemployement-rate-1948-2010.csv' datatype='table' name='[__tableau_internal_object_id__].[unemployement-rate-1948-2010.csv_862AEC1101D2459294CE4FCF6EDB641E]' role='measure' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='unemployement-rate-1948-2010.csv' id='unemployement-rate-1948-2010.csv_862AEC1101D2459294CE4FCF6EDB641E'>
+            <properties context=''>
+              <relation connection='textscan.0iounmc10jzhie12hujjl1o08z4n' name='unemployement-rate-1948-2010.csv' table='[unemployement-rate-1948-2010#csv]' type='table'>
+                <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+                  <column datatype='string' name='Series id' ordinal='0' />
+                  <column datatype='integer' name='Year' ordinal='1' />
+                  <column datatype='string' name='Period' ordinal='2' />
+                  <column datatype='real' name='Value' ordinal='3' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Area Chart'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontsize='12'>Python - Area Chart</run>
+            <run>Æ&#10;</run>
+            <run fontsize='12'>1984 - 2008 Expenditures</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='expenditures' name='federated.0hpn7vh1e1hp9913xrm390ccd487' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0hpn7vh1e1hp9913xrm390ccd487'>
+            <column caption='Expenditure' datatype='integer' name='[expenditure]' role='measure' type='quantitative' />
+            <column-instance column='[year]' derivation='None' name='[none:year:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[expenditure]' derivation='Sum' name='[sum:expenditure:qk]' pivot='key' type='quantitative' />
+            <column caption='Year' datatype='integer' name='[year]' role='dimension' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.0hpn7vh1e1hp9913xrm390ccd487].[none:year:qk]' scope='cols' value='' />
+            <encoding attr='space' class='0' field='[federated.0hpn7vh1e1hp9913xrm390ccd487].[none:year:qk]' field-type='quantitative' major-origin='0' major-spacing='5' max='2008' min='1984' range-type='fixed' scope='cols' type='space' />
+            <format attr='title' class='0' field='[federated.0hpn7vh1e1hp9913xrm390ccd487].[sum:expenditure:qk]' scope='rows' value='Expenditures' />
+            <encoding attr='space' class='0' field='[federated.0hpn7vh1e1hp9913xrm390ccd487].[sum:expenditure:qk]' field-type='quantitative' major-origin='0' major-spacing='10000.0' scope='rows' type='space' />
+          </style-rule>
+          <style-rule element='label'>
+            <format attr='text-format' field='[federated.0hpn7vh1e1hp9913xrm390ccd487].[sum:expenditure:qk]' value='n0;-0' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Area' />
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-color' value='#a0cbe8' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0hpn7vh1e1hp9913xrm390ccd487].[sum:expenditure:qk]</rows>
+        <cols>[federated.0hpn7vh1e1hp9913xrm390ccd487].[none:year:qk]</cols>
+      </table>
+      <simple-id uuid='{99E8F772-7280-41C3-BFAD-CCB3512B7EF2}' />
+    </worksheet>
+    <worksheet name='Stacked Area Chart'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontsize='12'>Tableau - Stacked Area Chart</run>
+            <run>Æ&#10;</run>
+            <run fontsize='12'>2007 - 2009 Unemployment Rates</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='unemployement-rate-1948-2010' name='federated.0f0w2m401tn06l1akt6zg0wvky0q' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0f0w2m401tn06l1akt6zg0wvky0q'>
+            <column datatype='string' name='[Period]' role='dimension' type='nominal'>
+              <aliases>
+                <alias key='&quot;M01&quot;' value='Jan' />
+                <alias key='&quot;M02&quot;' value='Feb' />
+                <alias key='&quot;M03&quot;' value='Mar' />
+                <alias key='&quot;M04&quot;' value='Apr' />
+                <alias key='&quot;M05&quot;' value='May' />
+                <alias key='&quot;M06&quot;' value='Jun' />
+                <alias key='&quot;M07&quot;' value='Jul' />
+                <alias key='&quot;M08&quot;' value='Aug' />
+                <alias key='&quot;M09&quot;' value='Sep' />
+                <alias key='&quot;M10&quot;' value='Oct' />
+                <alias key='&quot;M11&quot;' value='Nov' />
+                <alias key='&quot;M12&quot;' value='Dec' />
+              </aliases>
+            </column>
+            <column datatype='real' name='[Value]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[Year]' role='dimension' type='quantitative' />
+            <column-instance column='[Period]' derivation='None' name='[none:Period:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Year]' derivation='None' name='[none:Year:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Value]' derivation='Sum' name='[sum:Value:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <manual-sort column='[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Period:nk]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;M01&quot;</bucket>
+              <bucket>&quot;M02&quot;</bucket>
+              <bucket>&quot;M03&quot;</bucket>
+              <bucket>&quot;M04&quot;</bucket>
+              <bucket>&quot;M05&quot;</bucket>
+              <bucket>&quot;M06&quot;</bucket>
+              <bucket>&quot;M07&quot;</bucket>
+              <bucket>&quot;M08&quot;</bucket>
+              <bucket>&quot;M09&quot;</bucket>
+              <bucket>&quot;M10&quot;</bucket>
+              <bucket>&quot;M11&quot;</bucket>
+              <bucket>&quot;M12&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <filter class='quantitative' column='[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Year:qk]' included-values='in-range'>
+            <min>2007</min>
+            <max>2009</max>
+          </filter>
+          <slices>
+            <column>[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Year:qk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.0f0w2m401tn06l1akt6zg0wvky0q].[sum:Value:qk]' scope='rows' value='Unemployment Rates' />
+            <encoding attr='space' class='0' field='[federated.0f0w2m401tn06l1akt6zg0wvky0q].[sum:Value:qk]' field-type='quantitative' major-origin='0.0' major-spacing='5.0' scope='rows' type='space' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='width' field='[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Period:nk]' value='73' />
+          </style-rule>
+          <style-rule element='mark'>
+            <encoding attr='color' field='[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Year:qk]' num-steps='3' palette='blue_teal_10_0' type='interpolated' />
+          </style-rule>
+          <style-rule element='worksheet'>
+            <format attr='display-field-labels' scope='cols' value='false' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Area' />
+            <encodings>
+              <color column='[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Year:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-transparency' value='255' />
+              </style-rule>
+              <style-rule element='pane'>
+                <format attr='minwidth' value='-1' />
+                <format attr='maxwidth' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0f0w2m401tn06l1akt6zg0wvky0q].[sum:Value:qk]</rows>
+        <cols>[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Period:nk]</cols>
+      </table>
+      <simple-id uuid='{9E51A94C-3BF6-493F-A249-EB425AB71ED5}' />
+    </worksheet>
+    <worksheet name='Treemap'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='12'>Tableau - Treemap</run>
+            <run>Æ&#10;</run>
+            <run bold='true' fontsize='12'>Top 7 Categories by Expenditure</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='expenditures' name='federated.0hpn7vh1e1hp9913xrm390ccd487' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0hpn7vh1e1hp9913xrm390ccd487'>
+            <column caption='Category' datatype='string' name='[category]' role='dimension' type='nominal' />
+            <column caption='Expenditure' datatype='integer' name='[expenditure]' role='measure' type='quantitative' />
+            <column-instance column='[category]' derivation='None' name='[none:category:nk]' pivot='key' type='nominal' />
+            <column-instance column='[expenditure]' derivation='Sum' name='[sum:expenditure:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0hpn7vh1e1hp9913xrm390ccd487].[none:category:nk]'>
+            <groupfilter count='7' end='top' function='end' units='records' user:ui-marker='end' user:ui-top-by-field='true'>
+              <groupfilter direction='DESC' expression='SUM([expenditure])' function='order' user:ui-marker='order'>
+                <groupfilter function='level-members' level='[none:category:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+              </groupfilter>
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.0hpn7vh1e1hp9913xrm390ccd487].[none:category:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='on' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <size column='[federated.0hpn7vh1e1hp9913xrm390ccd487].[sum:expenditure:qk]' />
+              <color column='[federated.0hpn7vh1e1hp9913xrm390ccd487].[sum:expenditure:qk]' />
+              <text column='[federated.0hpn7vh1e1hp9913xrm390ccd487].[none:category:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='center' />
+                <format attr='vertical-align' value='center' />
+              </style-rule>
+              <style-rule element='datalabel'>
+                <format attr='color-mode' value='auto' />
+                <format attr='font-family' value='Raleway' />
+                <format attr='font-size' value='15' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-line-first' value='true' />
+                <format attr='mark-labels-line-last' value='true' />
+                <format attr='mark-labels-range-min' value='true' />
+                <format attr='mark-labels-range-max' value='true' />
+                <format attr='mark-labels-mode' value='all' />
+                <format attr='mark-labels-range-scope' value='pane' />
+                <format attr='mark-labels-range-field' value='' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{3CFFF57A-21A3-4170-9B3B-A7C52770496C}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='51'>
+    <window class='worksheet' name='Treemap'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+            <card pane-specification-id='0' param='[federated.0hpn7vh1e1hp9913xrm390ccd487].[sum:expenditure:qk]' type='color' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.0hpn7vh1e1hp9913xrm390ccd487].[none:category:nk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{1E1C8073-0472-4BD1-A7BE-893A0CCCC54D}' />
+    </window>
+    <window class='worksheet' name='Area Chart'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.0hpn7vh1e1hp9913xrm390ccd487].[none:year:qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{05968BA3-6BA8-4CDC-B552-123664CAA003}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Stacked Area Chart'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+            <card pane-specification-id='0' param='[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Year:qk]' type='color' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Period:nk]</field>
+            <field>[federated.0f0w2m401tn06l1akt6zg0wvky0q].[none:Year:qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{CD464771-50A7-421E-AFD5-2B9E654D5E6D}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='192' name='Area Chart' width='192'>
+      iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAMgklEQVR4nO3d2VIb2QHG8a8lgQSIHZtFMN5h4pnJjKcyqeQq93mEXOXhkifIG6RyMUkq
+      NV7GeB2PDTYYBKi19Hq2XLQAL8hqsDY4369qCrsGqK7j82+1etFxjDEGRJbK9HsDiPqpawEo
+      pfrys7bgGLWXZowG8hWAR2XtcYzaSzNGAxkAUa8wALIaAyCrMQCyGgMgqzEAshoDIKulDkDH
+      Pu7df4CDygEe3L8Pt1rFvbv3UK3X8fPdu9iv1vDw3l24XtzN7SXqqFzab4zDAEJKVA5cXLt+
+      DU8ePMbq725j8946Lt++g7eP/oPLa7+HW36N8cIKtNZnvljDq5ztcYzaSzNGTtqb4eKgjmfP
+      XyA7lIfneZiZnsJexcX85Tns7OxhdmYGlcoB5pevY3l+GkopZLPZM224lBK5XOo2rcQxai/N
+      GKUO4LQYQHdxjNpLM0Z8E0xWYwBkNQZAVmMAZDUGQFZjAGQ1BkBWYwBkNQZAVmMAZDUGQFZj
+      AGQ1BkBWYwBkNQZAVmMAZDUGQFZjAGQ1BkBWYwBkNQZAVmMAZDUGQFZjAGQ1BkBWYwBkNQZA
+      VmMAZDUGQFZjAGS1UwVgmoteKKU++ZXovEj/AfNG49H//onM7C0E7g6KY2Oo+h5mJyexX6lh
+      YnwM9XoDl5au4IvF2S5uMlHnpA6gsrOBvVoIpfbx/e3r+GX9GW5+u4at9adYXv0ae09/wvLN
+      O/ArO1BqikskdRnHqL2OLpEEACqooa5y2N54iZUrV7Dx8iW+uH4dr1/8gqWr17D16leUrn+J
+      8UKOK8R0GceoPS6RdIFxjNrjEklEbTAAshoDIKsxALIaAyCrMQCyGgMgqzEAshoDIKsxALIa
+      AyCrMQCyGgMgqzEAshoDIKsxALIaAyCrMQCyGgMgqzEAshqfqibrGGNQjxR2G4IBkB2MMQil
+      xm5DYM8TCIUGwFcAuuCE0ig3BMqeQCNKPijLcRw4jgOAAdAFYIyBNoBQBrHSCIRGKDVqgUAt
+      0kffdzjp38UAaOAZY2AAGANEUsNvTvBQaETNr0IbKJ18n/POz2Uynz7PwwBo4BhjEAiNaqhQ
+      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
+    </thumbnail>
+    <thumbnail height='192' name='Stacked Area Chart' width='192'>
+      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
+      BcsdSgAAAABJRU5ErkJggg==
+    </thumbnail>
+    <thumbnail height='192' name='Treemap' width='192'>
+      iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAHGklEQVR4nO3dTVNb5x2G8fsgHXT0hgCBqcWbARNsBztu0iSTdJHpZDrpojNd9vP0G/QD
+      dN9dF92k006nM5684szYsYOxMTaGgo1AgGxAAoSkbtpMWfgNbCv2ff1WCHiO/kfDNeccNk/Q
+      bDabAky1tXoAoJUIANbi///i3v11XZldatUswHMbGuzRQRQeef2hAL67uag//OnzYw8FvCq/
+      ++37qvRmjryeWyBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBY
+      IwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBY
+      IwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBYIwBY
+      IwBYIwBYI4BjSOc6NdqTlCSNjRWUfJZFbTFNnjrxUufCsyOAY0hmsirkEpKkgf4eJRTo3bdH
+      9MmFYYVBTGeH85Kk0wM9OnEir09+PqZCLtLufk1jA3364MKY3hnuVnsU6VfvvaX3zw2pJxW2
+      8pTsxFs9wOvuwtkRtXdu6+xgl6pnTyusrOuH7bh+84vTynaFmllY1+RoQc0w1NXvZ/WoJn1w
+      5oS6env1139e1me/fFuDI9LU5es6/e6kBkvrKlVqrT4tGwRwTNdm5vXFnbLq6aSiREyrxYq2
+      qqESiV41GoGCWKiudKg//2tak6eHdC7dkCSVyw+1vrOnhgIl2hp6VK1p41H12W6j8MIQwDHs
+      7myruL8vSXqwsqHluRV9/OGExtua+ts3NzR5fkKfXhzS7MKqzowW1JWOaW5xVelUpCAWkyTd
+      WS5pvrilX390TonOnGbvL7bylOwQwDFslzd1+79fz84uSZL+8fX0jz//5srNpx7j8vSCBvr7
+      VN2rqbZW0q31yssYFY9BAD8BS8tFLS0XWz2GJf4LBGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsE
+      AGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsE
+      AGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsEAGsE
+      AGsEAGsEAGsEAGsEAGsEAGsEAGvxVg8AHEd7W0xRlDjyegLAay2fDnV+LHfk9QSA11q92VDl
+      oHbk9TwDwBoBwBoBwNqhZ4AgCBQEQatmAZ7bcf9ag2az2fzfi6nlkv4ys3DMQwKvzkdDXUpE
+      +0def+gKsF7Z1ZWVjWMPBbwq4z0p9UdHvw7wDABrBABrBABrBABrBABrBABrBABrBABrBABr
+      BABrBABrBABrBABrBABrBABrBABrBABrBABrBABrBABrBABrBABrBABrBABrBABrBABrBABr
+      7BDzBDuLN7W1vKRGECkzMKqOgcILO3ZtfUX1RE5RJvnj96or8wrzw6oW55UdGHth74XHI4An
+      SA1OKDjYVDU+ruzJDm3dm1OQSKtR3dDBQVydI8OqlFa1u7qijvF3VN96oErpoXIjI6qsrGl/
+      56Fyb51XcLCt8p05pQbGFQ+qqm4+1N79u9qPCuob79fDxQVlhs9o8/pXah9pU5QO1ahVVZ69
+      oXhnQZl8WjulsvY21tR17qJi8VirP5o3BrdATxAEgQIFUhAoqO9pbXpGyXy36nt7qi5cUXnp
+      gVavfq/ccEGl69e0fv26OoZH1ayVtXn3gXIjwypOfani1JfKjU+q/MPX2lmY1t5BUpmf9Ssz
+      cEqN/V01Dw60cvkLJfsGlCn0a2vxtkrfXVJycEK1+zPaXp7X2tySUp1xbdz+d6s/ljcKV4Dn
+      kOwt6KB0V/V4j7rH63pUqSpVGFKYyaq5P6++Dz/WxrWvlOg9oXgypXiqU4FqCsJI8ShSPBFT
+      o9mmdN9Jaa0sqamNWzPq++hT7V76+6H3ajTalMikdZBNqVatKX1yWGF2T41StTUn/xPVHoup
+      J0o+/RcfgwCeIpbOqz3WLrWFirq7FOZ7VV+6qkoipvZspCCVloJQyXy3tu7NSfGUErkObd68
+      peK3ZXWMX1SsXlZx6pLCzlNKpesKwjbF8r3avHFD6d5ebUxfVZjtVqI7p/LstKJ8nzL5vIpT
+      lxSLssqPFrS93a629lBR19H3xH0T1Rp1be5Xjrz+0A4xn99e0h+/nXkhgzlr7q1r896OuieG
+      Wj3KG+/35wc0mD/6nTxXgJcgSOTVPZFv9Rh4BjwEwxoBwBoBwBoBwBoBwBoBwBoBwBoBwBoB
+      wBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoBwBoB
+      wBoBwBoBwBoBwBoBwBoBwNqhDTJ6UpHeO8nGDnh99GfTyieCI6//D533k7M7kje8AAAAAElF
+      TkSuQmCC
+    </thumbnail>
+  </thumbnails>
+</workbook>
