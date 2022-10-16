@@ -1,0 +1,166 @@
+---
+title: "R Charts"
+format: 
+    pdf:
+        toc: false
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# Load Libraries
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+
+theme_set(theme_classic())
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+## Datasets
+
+### Crime Rates
+
+```{r}
+#| label: loadcrime
+#| echo: false
+
+crimerate_df <- read.csv("data/crimerates-by-state-2005.csv")
+
+head(crimerate_df)
+```
+
+### Birth Rates Yearly
+
+```{r}
+#| label: loadbirth
+#| echo: false
+
+birthrate_df <- read.csv("data/birth-rates-yearly.csv")
+
+head(birthrate_df)
+```
+
+## Charts
+
+### 1. Scatterplot
+
+```{r}
+#| label: statescrime
+
+states_crime <- crimerate_df[crimerate_df$state != 'United States', ]
+states_crime
+```
+```{r}
+#| label: mutatestates
+
+crimes_df <- melt(states_crime, id.vars = c('state', 'population'), variable.name = 'crimes')
+
+crimes_df
+```
+
+```{r}
+#| label: scatterplot
+#| echo: false
+
+fig <- crimes_df %>% 
+    ggplot(aes(x = population, y = value, color = crimes)) + 
+    geom_point() +
+    ggtitle("Scatter Plot - R \n2005 U.S. States Crime Rate to Population") +
+    guides(size = 'none') +
+    xlab("Population") + 
+    ylab("Crime Rates") +
+    guides(color = guide_legend(title = "Types of Crime", override.aes = list(size = 8))) +
+    scale_color_manual(values = c("murder" = "red", 
+                                  "forcible_rape" = "green", 
+                                  "robbery" ="yellow", 
+                                  "aggravated_assault" = "orange", 
+                                  "burglary" = "blue", 
+                                  "larceny_theft" = "purple", 
+                                  "motor_vehicle_theft" = "gray"),
+                       labels = c("Murder", "Forcible Rape", "Robbery", "Aggravated Assault",
+                                  "Burglary", "Larceny Theft", "Motor Vehicle Theft"))
+
+ggsave("images/scatter-plot-r.png")
+```
+
+
+### 2. Bubble Chart
+
+```{r}
+#| label: uscrime
+
+us_crime <- crimerate_df[crimerate_df$state == 'United States', ]
+us_crime
+```
+
+```{r}
+#| label: mutateus
+
+uscrimes_df <- melt(us_crime, id.vars = c('state', 'population'), variable.name = 'crimes')
+
+uscrimes_df
+```
+
+
+```{r}
+#| label: bubblechart
+#| echo: false
+
+fig <- uscrimes_df %>% 
+    ggplot(aes(x = value, y = state)) +
+    geom_point(aes(color = crimes, size = value), alpha = 0.5) +
+    scale_size(range = c(0.8, 15), guide = 'none') + 
+    guides(color = guide_legend(title = "Types of Crime", override.aes = list(size = 8))) +
+    scale_color_manual(values = c("murder" = "red", 
+                                  "forcible_rape" = "green", 
+                                  "robbery" ="yellow", 
+                                  "aggravated_assault" = "orange", 
+                                  "burglary" = "blue", 
+                                  "larceny_theft" = "purple", 
+                                  "motor_vehicle_theft" = "gray"),
+                       labels = c("Murder", "Forcible Rape", "Robbery", "Aggravated Assault",
+                                  "Burglary", "Larceny Theft", "Motor Vehicle Theft")) +
+    ggtitle("Bubble Chart - R \n2005 U.S. Crime Rate") + 
+    xlab("Crime Rates") +
+    ylab(NULL) +
+    theme(legend.position="bottom")
+
+ggsave("images/bubble-chart-r.png")
+```
+
+
+
+### 3. Density Plot
+```{r}
+#| label: birthyears
+
+births_df <- birthrate_df %>% 
+    filter(year == 2008 | year == 1960)
+births_df <- births_df[order(births_df$year), ]
+births_df$year <- as.character(births_df$year)
+births_df
+```
+
+
+```{r}
+#| label: densityplot
+#| echo: false
+
+fig <- births_df %>% 
+    ggplot(aes(x = rate, fill = year)) +
+    geom_density(alpha = 0.3) +
+    ggtitle("Density Plot - R\n1960 vs 2008 Birth Rates") + 
+    labs(fill = 'Year') +
+    scale_x_continuous(name="Birth Rates", limits=c(0, 70)) +
+    scale_fill_manual(values = c("blue", "yellow"))
+
+ggsave("images/density-plot-r.png")
+```
+
+
+
+
