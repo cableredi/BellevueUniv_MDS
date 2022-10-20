@@ -54,6 +54,7 @@ head(birthrate_df)
 states_crime <- crimerate_df[crimerate_df$state != 'United States', ]
 states_crime
 ```
+
 ```{r}
 #| label: mutatestates
 
@@ -73,6 +74,7 @@ fig <- crimes_df %>%
     guides(size = 'none') +
     xlab("Population") + 
     ylab("Crime Rates") +
+    scale_x_continuous(labels = scales::comma) +
     guides(color = guide_legend(title = "Types of Crime", override.aes = list(size = 8))) +
     scale_color_manual(values = c("murder" = "red", 
                                   "forcible_rape" = "green", 
@@ -85,8 +87,8 @@ fig <- crimes_df %>%
                                   "Burglary", "Larceny Theft", "Motor Vehicle Theft"))
 
 ggsave("images/scatter-plot-r.png")
-```
 
+```
 
 ### 2. Bubble Chart
 
@@ -104,7 +106,6 @@ uscrimes_df <- melt(us_crime, id.vars = c('state', 'population'), variable.name 
 
 uscrimes_df
 ```
-
 
 ```{r}
 #| label: bubblechart
@@ -132,9 +133,8 @@ fig <- uscrimes_df %>%
 ggsave("images/bubble-chart-r.png")
 ```
 
-
-
 ### 3. Density Plot
+
 ```{r}
 #| label: birthyears
 
@@ -144,7 +144,6 @@ births_df <- births_df[order(births_df$year), ]
 births_df$year <- as.character(births_df$year)
 births_df
 ```
-
 
 ```{r}
 #| label: densityplot
@@ -160,7 +159,3 @@ fig <- births_df %>%
 
 ggsave("images/density-plot-r.png")
 ```
-
-
-
-
