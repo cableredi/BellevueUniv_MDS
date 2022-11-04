@@ -1,0 +1,166 @@
+---
+title: "R Charts"
+format: 
+    pdf:
+        toc: false
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# Load Libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(usmap)
+
+theme_set(theme_classic())
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+## Datasets
+
+### Costcos
+
+```{r}
+#| label: loadcostcos
+#| echo: false
+
+costcos_df <- read.csv("data/costcos-geocoded.csv")
+
+head(costcos_df)
+```
+
+### PPG
+
+```{r}
+#| label: loadcostcos
+#| echo: false
+
+ppg_df <- read.csv("data/ppg2008.csv")
+
+head(ppg_df)
+```
+
+## Graphs
+
+### Heat Map
+
+```{r}
+#| label: firsten
+
+# Use only the first 10 rows and first 10 columns
+ppg_ten_df <- ppg_df[c(1:10), c(1:11)]
+
+head(ppg_ten_df)
+```
+
+
+```{r}
+#| label: normalize
+
+# copy dataset
+ppg_df_norm <- data.frame(ppg_ten_df)
+
+# normalize the columns
+ppg_df_norm[c(2:11)] <- scale(ppg_df_norm[c(2:11)])
+
+head(ppg_df_norm)
+```
+
+```{r}
+#| label: pivottable
+
+ppg_df_long <- ppg_df_norm %>% pivot_longer(!Name, 
+                                            names_to = 'Type', 
+                                            values_to = 'Stat')
+
+head(ppg_df_long)
+```
+
+
+```{r}
+#| label: heatmap
+
+fig <- ggplot(ppg_df_long, aes(x = factor(Type, level = c('G', 'MIN', 'PTS',
+                                                          'FGM', 'FGA', 'FGP',
+                                                          'FTM', 'FTA', 'FTP',
+                                                          'X3PM')),
+                               y = Name, fill = Stat)) +
+    geom_tile(show.legend = FALSE) +
+    geom_text(aes(label = round(Stat, digits = 2)), color = 'white', size = 3) +
+    coord_fixed() +
+    guides(fill = guide_colorbar(barwidth = 20, barheight = 0.5)) +
+    ggtitle("Heat Map - R\n2008 NBA Performance") +
+    xlab('Stat')
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1,
+                                     size = 8),
+          legend.position = 'top')
+
+#fig
+ggsave("images/heat-map-r.png", width = 8, height = 10, units = "in")
+
+```
+
+### Spatial Chart
+
+
+```{r}
+#| label: readshape
+
+usa_states <- readOGR("Data/States_shapefile.shp", stringsAsFactors = FALSE)
+
+```
+
+```{r}
+#| label: transform
+
+latLong <- data.frame(lon = costcos_df$Longitude, lat = costcos_df$Latitude)
+
+transformed_data <- usmap_transform(latLong)
+transformed_data
+
+```
+
+```{r}
+#| label: spatialchart
+
+# map the counties
+
+fig <- plot_usmap(regions = "states") +
+    labs(title = "Spatial Chart - R", subtitle = "USA Costco Locations") + 
+    theme(panel.background=element_blank()) +
+    geom_point(data = transformed_data, aes(x = x, y = y), color = 'blue', alpha = 0.5)
+
+#fig
+ggsave("images/spatial-chart-r.png", width = 8, height = 10, units = "in")
+```
+
+
+
+### Contour Chart
+
+```{r}
+#| label: bbvars
+
+X <- sort(ppg_df$MIN, decreasing = FALSE)
+Y <- sort(ppg_df$PTS, decreasing = FALSE)
+
+Z <- sqrt(outer(X ^ 2, Y ^ 2, '+'))
+
+```
+
+```{r}
+#| label: contourchart
+
+# create png file
+png('images/contour-chart-r.png')
+
+filled.contour(Z, plot.title = title(main = "Contour Map - R\n2008 NBA Performance: Minutes vs Points", 
+                                     xlab = 'Minutes (%)',  ylab = 'Points(%)', cex.main = 0.8))
+
+dev.off()
+```
