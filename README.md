@@ -1,4 +1,4 @@
-# bu-dsc
-Bellevue University - Data Science MS Program
+# Bellevue University
+## Master of Science in Program
 
-### Homework Assignments
+### Homework Assignments and Projects
