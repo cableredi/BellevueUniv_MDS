@@ -1,0 +1,5 @@
+format,uncompressed,gzip,snappy
+JSON Schema,0.0 KB,3249.17 KB,
+Avro,19185.77 KB,,
+Parquet,1929.17 KB,,
+Protocol buffers,18765.11 KB,,3395.79 KB
