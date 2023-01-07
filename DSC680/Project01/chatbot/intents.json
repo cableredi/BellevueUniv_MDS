@@ -137,9 +137,10 @@
    "tag": "foilproblems",
    "patterns": [
     "copper foil",
+    "copperfoil peels off",
     "foil not sticking",
     "My foil isn't sticking to the glass",
-    "The copper foil peals off when fluxing"
+    "copper foil peels off"
    ],
    "responses": [
     "Warm the glass on a light box or plate warmer. This should help with sticking",
@@ -268,16 +269,6 @@
    "responses": [
     "Yes, you do need a little talent, patience, and an eye for color.  Plus good hand eye coordination would help."
    ]
-  },
-  {
-   "tag": "moon",
-   "patterns": [
-    "How do we go to the moon"
-   ],
-   "responses": [
-    "We cant go to the moon but we can depict the moon in glass!"
-   ],
-   "context": ""
   }
  ]
 }
