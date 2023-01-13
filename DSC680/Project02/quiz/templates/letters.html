@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <div class="grid-container">
+    <div class="grid-header">
+      <a href="/" class="">Return to Main Menu</a>
+    </div>
+
+    <h1 class="grid-title">Learn to Draw Your Letters</h1>
+
+    <div class="grid-drawing">
+        <div class="prompt" id="prompt">
+            <p>Write a(n) <span class="prompt-letter">{{ prompt_value }}</span></p>
+        </div>
+
+        <div id="drawing">
+            <canvas id="canvas" width="200px" height="200px"></canvas>
+        </div>
+
+        <form id="letters-form" action="letters" method="POST">
+            <input id="image" name="image" type="hidden" />
+            <input id="letter" name="letter" type="hidden" value="{{ prompt_value }}">
+
+            <button type="button" class="button button-small" onclick="lettersAction()">Check</button>
+            <button type="button" class="button button-small" onclick="resetCanvas()">Clear</button>
+        </form>
+    </div>
+
+    <div class="grid-response" id="grid-response">
+        {% if message %}
+            {% if prev_letter == message %}
+                <p class="response">Correct!</p>
+                <p>You wrote: <span class="prev-letter correct">{{ prev_letter }}</span></p>
+                <p>I Guessed: <span class="guess-letter correct">{{ message }}</span></p>
+            {% else %}
+                <p class="response">Maybe I was mistaken. Try again!</p>
+                <p>You were supposed to write: <span class="prev-letter incorrect">{{ prev_letter }}</span></p>
+                <p>I thought you wrote: <span class="guess-letter incorrect">{{ message }}</span></p>
+            {% endif %}
+        {% endif %}
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      startCanvas()
+    })
+  </script>
+
+{% endblock %}
