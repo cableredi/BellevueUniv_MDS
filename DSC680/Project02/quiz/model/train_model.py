@@ -36,6 +36,9 @@ class Training:
         '''
         create training and validation dataset and normalize
         '''
+        # Convert images to 4D
+        self.imgs = np.expand_dims(self.imgs, -1)
+
         x_train, x_val, y_train, y_val  = train_test_split(self.imgs, self.labels,
                                                    train_size = 0.80,
                                                    test_size = 0.20,

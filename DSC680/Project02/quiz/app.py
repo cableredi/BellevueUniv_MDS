@@ -66,6 +66,30 @@ def get_form():
 
     return label, img
 
+def predict_letter(img):
+    '''
+    Predict the letter from the model
+
+    args:
+        img (array)
+
+    return:
+        letter (str)
+    '''
+    # predict letter from image
+    results = model.predict(img)
+
+    # get the top probability
+    pred_letter = np.argmax(results, axis = -1)
+
+    # get the letter that corresponds to the pred_letter
+    pred_letter = ENCODER.inverse[pred_letter[0]]
+    
+    # print results to terminal
+    print(f'Results: {pred_letter}')
+
+    return pred_letter
+
 # Route: index
 @app.route('/')
 def index():
@@ -136,12 +160,12 @@ def letters_post():
     # Get letter from letters form
     prev_letter = letter
 
-    pred_letter = np.argmax(model.predict(img), axis = -1)
-    pred_letter = ENCODER.inverse[pred_letter[0]]
-
-    # get a new random letter from ENCODER LETTERS dictionary
+    # predict drawn letter
+    pred_letter = predict_letter(img)
+    
+    # get a new random letter from ENCODER LETTERS dictionary if correct
     letter = get_new_letter()
-
+    
     return render_template('letters.html', prompt_value = letter, message = pred_letter, prev_letter = prev_letter)
 
 # Route: Model - Get

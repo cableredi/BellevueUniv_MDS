@@ -110,6 +110,15 @@ a {
     border-bottom: 4px solid #210124;
 }
 
+.grid-title div {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.grid-title div p {
+    margin: 10px;
+}
+
 .grid-drawing {
     grid-area: drawing;
     justify-self: end;
