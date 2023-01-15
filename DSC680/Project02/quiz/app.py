@@ -33,7 +33,7 @@ app.secret_key = 'my_secret_key'
 
 model = keras.models.load_model('model/letters_model.h5')
 
-def get_new_letter():
+def getNewLetter():
     '''
     Gets a random letter
 
@@ -47,7 +47,7 @@ def get_new_letter():
 
     return letter
 
-def get_form():
+def getForm():
     '''
     Get letter and img from canvas form
 
@@ -66,7 +66,7 @@ def get_form():
 
     return label, img
 
-def predict_letter(img):
+def predictLetter(img):
     '''
     Predict the letter from the model
 
@@ -76,6 +76,8 @@ def predict_letter(img):
     return:
         letter (str)
     '''
+    print('predictedLetter function')
+
     # predict letter from image
     results = model.predict(img)
 
@@ -86,7 +88,7 @@ def predict_letter(img):
     pred_letter = ENCODER.inverse[pred_letter[0]]
     
     # print results to terminal
-    print(f'Results: {pred_letter}')
+    #print(f'Predicted Letter: {pred_letter}')
 
     return pred_letter
 
@@ -103,7 +105,10 @@ def train_get():
     session.clear()
 
     # get message from session, if not there ''
-    message = session.get('message', '')
+    if 'message' in session:
+        message = session['message']
+    else:
+        message = ''
 
     # Train letters - this will make sure letters are balanced
     labels = np.load('data/labels.npy')
@@ -120,7 +125,7 @@ def train_get():
 # Route: Training - Post
 @app.route('/train', methods = ['POST'])
 def train_post():
-    label, img = get_form()
+    label, img = getForm()
 
     if exists('data/labels.npy'):
         labels = np.load('data/labels.npy')
@@ -148,25 +153,62 @@ def letters_get():
     session.clear()
     
     # get a random letter from ENCODER LETTERS dictionary
-    letter = get_new_letter()
+    new_letter = getNewLetter()
 
-    return render_template('letters.html', prompt_value = letter, message = '', prev_letter = '')
+    # parameters
+    parameters = {
+        'new_letter': new_letter,
+        'predicted_letter': '',
+        'prev_letter': '',
+        'guessed_count': 0
+    }
+
+    return render_template('letters.html', parameters = parameters)
 
 # Route: Letters - Post
 @app.route('/letters', methods = ['POST'])
 def letters_post():
-    letter, img = get_form()
+    # get form data
+    letter, img = getForm()
+
+    # get session data
+    if 'guessed_count' in session:
+        guessed_count = session['guessed_count']
+    else:
+        guessed_count = 0
 
     # Get letter from letters form
     prev_letter = letter
 
-    # predict drawn letter
-    pred_letter = predict_letter(img)
-    
-    # get a new random letter from ENCODER LETTERS dictionary if correct
-    letter = get_new_letter()
-    
-    return render_template('letters.html', prompt_value = letter, message = pred_letter, prev_letter = prev_letter)
+    # predict drawn letter from model
+    predicted_letter = predictLetter(img)
+
+    # get a new random letter from ENCODER LETTERS dictionary
+    if prev_letter == predicted_letter:
+        new_letter = getNewLetter()
+        guessed_count = 0
+    elif guessed_count >= 2:
+        new_letter = getNewLetter()
+        guessed_count = 0
+    else:
+        new_letter = prev_letter
+        guessed_count += 1
+
+    session['guessed_count'] = guessed_count
+
+    print(f'GUESSED_COUNT: {guessed_count}')
+    print(f'new_letter: {new_letter}')
+    print(f'predicted_letter: {predicted_letter}')
+
+    # parameters
+    parameters = {
+        'new_letter': new_letter,
+        'predicted_letter': predicted_letter,
+        'prev_letter': prev_letter,
+        'guessed_count': guessed_count
+    }            
+        
+    return render_template('letters.html', parameters = parameters)
 
 # Route: Model - Get
 @app.route('/train-model', methods=['GET'])

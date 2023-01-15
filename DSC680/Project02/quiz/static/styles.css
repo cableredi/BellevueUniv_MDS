@@ -106,7 +106,7 @@ a {
     justify-content: center;
     align-items: center;
 
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
     border-bottom: 4px solid #210124;
 }
 
@@ -132,7 +132,7 @@ a {
 .grid-response {
     grid-area: response;
     justify-self: start;
-    font-size: 1.3em;
+    font-size: 1.1em;
 }
 
 .grid-container {
@@ -144,7 +144,7 @@ a {
         "title title"
         "drawing response";
     column-gap: 30px;
-    row-gap: 20px;
+    row-gap: 30px;
     justify-items: center;
     align-items: center;
     justify-content: center;
@@ -166,13 +166,11 @@ a {
 
 .prev-letter {
     font-family: 'Andika', sans-serif;
-    font-size: 1.2em;
     font-weight: 700;
 }
 
 .guess-letter {
     font-family: 'Andika', sans-serif;
-    font-size: 1.2em;
     font-weight: 700;
 }
 
