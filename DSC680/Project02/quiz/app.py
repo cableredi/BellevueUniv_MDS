@@ -1,7 +1,6 @@
 import numpy as np
 import model.train_model as trainpy
 
-from tensorflow.keras.preprocessing import image
 from flask import (
     Flask, render_template, request,
     redirect, url_for, session
@@ -102,7 +101,7 @@ def index():
 # Route: Training - Get
 @app.route('/train', methods = ['GET'])
 def train_get():
-    session.clear()
+    # session.clear()
 
     # get message from session, if not there ''
     if 'message' in session:
@@ -197,8 +196,8 @@ def letters_post():
     session['guessed_count'] = guessed_count
 
     print(f'GUESSED_COUNT: {guessed_count}')
-    print(f'new_letter: {new_letter}')
-    print(f'predicted_letter: {predicted_letter}')
+    print(f'Letter: {new_letter}')
+    print(f'Predicted Letter: {predicted_letter}')
 
     # parameters
     parameters = {
@@ -221,8 +220,8 @@ def train_model_get():
 @app.route('/train-model', methods = ['POST'])
 def train_model_post():
     if request.form['model_submit']:
-        train = trainpy.Training()
-        train.build()
+        #train = trainpy.Training()
+        train = trainpy.train_model()
 
     print('Model successfully retrained')
     

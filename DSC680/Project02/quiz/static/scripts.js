@@ -79,7 +79,7 @@ function resetCanvas() {
   clickY = []
   clickDrag = []
   clearCanvas()
-  document.getElementById("grid-response").innerHTML = "";
+  //document.getElementById("grid-response").innerHTML = "";
 }
 
 function drawCanvas() {
