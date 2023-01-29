@@ -101,8 +101,6 @@ def index():
 # Route: Training - Get
 @app.route('/train', methods = ['GET'])
 def train_get():
-    # session.clear()
-
     # get message from session, if not there ''
     if 'message' in session:
         message = session['message']
@@ -126,24 +124,30 @@ def train_get():
 def train_post():
     label, img = getForm()
 
+    # save labels to labels file (append if exists)
     if exists('data/labels.npy'):
         labels = np.load('data/labels.npy')
         labels = np.append(labels, label)
     else:
         labels = np.array([label])
 
+    # save labels file
     np.save('data/labels.npy', labels)
 
+    # save images to images file (append if exists)
     if exists('data/images.npy'):
         imgs = np.load('data/images.npy')
         imgs = np.vstack([imgs, img])
     else:
         imgs = img
     
+    # save images file
     np.save('data/images.npy', imgs)
 
+    # save letter added to model to session
     session['message'] = f'"{ label }" added to the training model'
 
+    # return to train get route
     return redirect(url_for('train_get'))
 
 # Route: Letters - Get

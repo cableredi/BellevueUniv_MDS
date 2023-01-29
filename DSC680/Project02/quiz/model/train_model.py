@@ -90,6 +90,6 @@ def train_model():
 
     model.fit(it_train, steps_per_epoch = steps, 
                 epochs = 100, validation_data = (x_val, y_val), verbose = 1,
-            callbacks = [early_stopping, mcp_save])
+                callbacks = [early_stopping, mcp_save])
 
     return
