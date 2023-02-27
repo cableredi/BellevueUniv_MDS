@@ -1,0 +1,207 @@
+---
+title: "R"
+format: pdf
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+# Load Libraries
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readxl)
+library("wordcloud2")
+library("tm")
+library(webshot)
+library("htmlwidgets")
+
+theme_set(theme_classic())
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+
+# supress warnings
+#options(warn = -1)
+```
+
+## Datasets
+
+### Crime Rates
+
+```{r}
+#| label: loadcrime
+#| echo: false
+#| 
+crime_df <- read.csv("data/crimeratesbystate-formatted.csv")
+
+head(crime_df)
+```
+
+### Education
+
+```{r}
+#| label: loadeducation
+#| echo: false
+
+
+education_df <- read.csv("data/education.csv")
+
+head(education_df)
+```
+
+### Chocolate ratings
+
+```{r}
+#| label: loadchocolate
+#| echo: false
+
+
+chocolate_df <- read_xlsx("data/Chocolate Ratings.xlsx")
+
+head(chocolate_df)
+```
+
+## Graphs
+
+### Histogram
+
+```{r}
+#| label: justcrimes
+
+just_crimes_df <- subset(crime_df, select = -c(state) )
+
+just_crimes_df
+```
+
+```{r}
+#| label: histogram
+
+fig <- ggplot(gather(just_crimes_df), aes(value)) + 
+    geom_histogram(bins = 10) + 
+    facet_wrap(~key, scales = 'free_x') +
+    ggtitle("Histograms - R\nCrime Rates")
+
+#fig
+ggsave("images/histograms-r.png", width = 8, height = 10, units = "in")
+```
+
+### Box Plot
+
+```{r}
+#| label: justscores
+
+just_scores_df <- subset(education_df, select = -c(state) )
+
+just_scores_df
+```
+
+```{r}
+#| label: boxplot
+
+fig <- ggplot(gather(just_scores_df), aes(value)) + 
+    geom_boxplot() + 
+    facet_wrap(~key, scales = 'free_x') +
+    ggtitle("Box Plots - R\nUnited States Education")
+
+#fig
+ggsave("images/boxplot-r.png", width = 8, height = 10, units = "in")
+```
+
+### Bullet Chart
+
+```{r}
+#| label: formatdata
+
+us_states <- education_df$state
+reading_scores <- education_df$reading
+
+data = data.frame(us_states, reading_scores, stringsAsFactors = TRUE)
+data <- data[-1,]
+data
+```
+
+```{r}
+#| label: usreading
+
+us_average <- education_df[education_df$state == 'United States', 'reading']
+us_average
+```
+
+
+```{r fig.height=15, fig.width=7}
+#| label: bulletchart
+
+
+fig <- ggplot() +
+  geom_bar(data = education_df,
+           aes(x = state, y = 800), stat = "identity", width = .8, fill = '#0000ff',
+           position = "stack") +
+  geom_bar(data = education_df,
+           aes(x = state, y = 650), stat = "identity", width = .8, fill = '#5050fb',
+           position = "stack") +
+  geom_bar(data = education_df,
+           aes(x = state, y = 400), stat = "identity", width = .8, fill = '#a0a0f7',
+           position = "stack") +
+  geom_bar(data = education_df,
+           aes(x = state, y = reading), fill = "black", width = 0.2,
+           stat = "identity") +
+  coord_flip(expand = FALSE) +
+  labs(title='Bullet Chart - R', subtitle = 'US Reading Scores', 
+       x = 'State', y = 'Reading Score') +
+  geom_errorbar(data = education_df,
+                aes(x = state, ymin = us_average, ymax = us_average),
+                color = 'red', width = 0.8, size = 1)
+
+
+#fig
+ggsave("images/bulletchart-r.png", width = 8, height = 10, units = "in")
+```
+
+### Word Cloud
+
+```{r}
+#| label: buildcorpus
+
+# load characteristics as a corpus
+docs <- Corpus(VectorSource(chocolate_df['Most Memorable Characteristics']))
+
+```
+
+```{r}
+#| label: cleandata
+
+# remove quotation marks
+docs <- tm_map(docs, removePunctuation)
+
+# Eliminate extra white spaces
+docs <- tm_map(docs, stripWhitespace)
+
+```
+
+```{r}
+#| label: buildmatrix
+
+# build term-document matrix
+
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+
+head(d, 10)
+```
+
+```{r}
+
+#| label: wordcloud
+
+set.seed(1234)
+
+fig <- wordcloud2(data = d, color = 'random-light', backgroundColor = 'black', shape = 'circle', size = 0.7)
+
+#fig
+saveWidget(fig,"tmp.html",selfcontained = F)
+webshot("tmp.html", "images/wordcloud-r.png", delay = 5, vwidth = 480, vheight = 480)
+```
